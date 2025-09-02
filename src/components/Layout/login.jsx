@@ -1,13 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { signInUser } from "../../helper/supabaseAuth";
+import { useNavigate, useLocation } from "react-router-dom";
+import { showToast } from "../../helper/toastUtil";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    // Check if user just registered
+    const queryParams = new URLSearchParams(location.search);
+    const registered = queryParams.get("registered");
+
+    if (registered === "true") {
+      showToast("Account created successfully! You can now log in.", "success");
+    }
+  }, [location]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically handle authentication
-    console.log("Login attempt:", { email, password });
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await signInUser(email, password);
+
+    if (error) {
+      setError(error.message);
+      showToast(error.message, "error");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    showToast("Login successful!", "success");
+    console.log("Login successful:", data);
+    navigate("/success");
   };
 
   return (
@@ -59,9 +90,14 @@ const Login = () => {
           <button
             type="submit"
             className="w-full py-2 px-4 bg-slate-900 text-white rounded-md hover:bg-slate-700 transition duration-300 mb-4"
+            disabled={loading}
           >
-            Sign In
+            {loading ? "Signing in..." : "Sign In"}
           </button>
+
+          {error && (
+            <div className="text-red-500 text-sm mb-4 text-center">{error}</div>
+          )}
 
           <div className="text-center text-sm text-gray-300">
             Don't have an account?{" "}

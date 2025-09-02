@@ -1,15 +1,50 @@
 import React, { useState } from "react";
+import { signUpUser } from "../../helper/supabaseAuth";
+import { useNavigate } from "react-router-dom";
+import { showToast } from "../../helper/toastUtil";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically handle registration
-    console.log("Signup attempt:", { name, email, password, confirmPassword });
+
+    // Password validation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      showToast("Passwords do not match", "error");
+      return;
+    }
+
+    // Password strength validation
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      showToast("Password must be at least 6 characters long", "error");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await signUpUser(email, password, name);
+
+    if (error) {
+      setError(error.message);
+      showToast(error.message, "error");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    showToast("Account created successfully! You can now log in.", "success");
+    console.log("Signup successful:", data);
+    navigate("/login?registered=true"); // Redirect to login with a success flag
   };
 
   return (
@@ -83,9 +118,14 @@ const Signup = () => {
           <button
             type="submit"
             className="w-full py-2 px-4 bg-slate-900 text-white rounded-md hover:bg-slate-700 transition duration-300 mb-4"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
+
+          {error && (
+            <div className="text-red-500 text-sm mb-4 text-center">{error}</div>
+          )}
 
           <div className="text-center text-sm text-gray-300">
             Already have an account?{" "}
