@@ -4,6 +4,7 @@ import { AuthProvider } from "./helper/AuthContext.jsx";
 import { useAuth } from "./helper/authUtils";
 
 // Import your page components here
+import LandingPage from "./components/Layout/landingPage.jsx";
 import Login from "./components/Layout/login";
 import Signup from "./components/Layout/Signup";
 import ResetPassword from "./components/Layout/reset_password";
@@ -57,6 +58,7 @@ const AppRoutes = () => {
       <AuthProvider>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
           <Route
             path="/login"
             element={
