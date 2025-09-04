@@ -38,7 +38,7 @@ const Login = () => {
     setLoading(false);
     showToast("Login successful!", "success");
     console.log("Login successful:", data);
-    navigate("/success");
+    navigate("/beranda");
   };
 
   return (
