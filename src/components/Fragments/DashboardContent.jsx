@@ -103,7 +103,7 @@ export default function DashboardContent({ name }) {
         <section className="mt-8">
           <h3 className="text-2xl font-bold text-black">Lanjutkan Belajar</h3>
           <div
-            className="mt-4 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl shadow-md flex flex-col md:flex-row items-center gap-6 hover:bg-white/20 transition-colors duration-300">
+            className="mt-4 bg-white backdrop-blur-md border border-white/20 p-4 rounded-xl shadow-md flex flex-col md:flex-row items-center gap-6 hover:bg-white/20 transition-colors duration-300">
             <img src="https://placehold.co/600x400/3b82f6/ffffff?text=UI/UX" alt="Thumbnail kursus UI/UX"
               className="w-full md:w-1/3 h-48 md:h-full object-cover rounded-lg" />
             <div className="w-full">
@@ -114,7 +114,7 @@ export default function DashboardContent({ name }) {
                   <span>Progres</span>
                   <span>50%</span>
                 </div>
-                <div className="w-full bg-white/20 rounded-full h-2.5">
+                <div className="w-full bg-gray-300 rounded-full h-2.5">
                   <div className="progress-bar-fill h-2.5 rounded-full" style={{ width: "50%" }}></div>
                 </div>
               </div>

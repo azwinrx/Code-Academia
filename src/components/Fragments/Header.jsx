@@ -1,6 +1,6 @@
 export default function Header() {
   return (
-    <header className="w-full bg-[#132238] text-white p-4 flex items-center justify-between fixed z-10" style={{ marginLeft: '240px' }}>
+    <header className="w-full bg-[#132238] text-white p-4 flex items-center justify-between fixed z-10">
       <div className="flex-1"></div>
       <div className="flex items-center gap-4">
         <input
