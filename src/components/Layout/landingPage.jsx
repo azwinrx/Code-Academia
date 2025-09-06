@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import {
-  Bars3Icon,
-  XMarkIcon,
-  CodeBracketIcon,
-  AcademicCapIcon,
-  TrophyIcon,
-  UserGroupIcon,
-  BookOpenIcon,
-  StarIcon,
+  Bars3Icon, // Icon hamburger menu untuk mobile navigation
+  XMarkIcon, // Icon X untuk close mobile menu
+  CodeBracketIcon, // Icon bracket code untuk logo dan representasi coding
+  AcademicCapIcon, // Icon topi akademik untuk dashboard belajar/edukasi
+  TrophyIcon, // Icon trophy untuk misi/achievement/quiz interaktif
+  UserGroupIcon, // Icon grup user untuk tim bantuan/komunitas
+  BookOpenIcon, // Icon buku terbuka untuk materi pembelajaran
+  StarIcon, // Icon bintang untuk impian/visi dan tracking pemahaman
+  HeartIcon, // Icon hati untuk impian/visi yang penuh kasih
+  RocketLaunchIcon, // Icon roket untuk misi/tujuan yang ambisius
 } from "@heroicons/react/24/outline";
 import "../../App.css";
 
@@ -33,12 +35,12 @@ export default function LandingPage() {
         >
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
-              <span className="sr-only">Code Academia</span>
+              <span className="sr-only">LogicBase</span>
               <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <CodeBracketIcon className="h-5 w-5 text-white" />
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                Code Academia
+                LogicBase
               </span>
             </a>
           </div>
@@ -87,12 +89,12 @@ export default function LandingPage() {
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-gray-900 dark:sm:ring-gray-100/10">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
-                <span className="sr-only">Code Academia</span>
+                <span className="sr-only">LogicBase</span>
                 <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                   <CodeBracketIcon className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-lg font-bold text-gray-900 dark:text-white">
-                  Code Academia
+                  LogicBase
                 </span>
               </a>
               <button
@@ -156,41 +158,42 @@ export default function LandingPage() {
         <div className="mx-auto max-w-4xl py-16 sm:py-24 lg:py-32">
           <div className="hidden sm:mb-6 sm:flex sm:justify-center">
             <div className="relative rounded-full px-4 py-2 text-sm leading-6 text-gray-600 ring-1 ring-blue-600/20 hover:ring-blue-600/30 bg-blue-50/50 dark:bg-blue-900/20 dark:text-blue-300 dark:ring-blue-400/30">
-              🎓 Platform Pembelajaran Coding Terdepan{" "}
+              � Tempat Seru Belajar Coding untuk Anak-Anak{" "}
               <a
                 href="#about"
                 className="font-semibold text-blue-600 dark:text-blue-400"
               >
                 <span aria-hidden="true" className="absolute inset-0" />
-                Pelajari Lebih Lanjut <span aria-hidden="true">&rarr;</span>
+                Yuk Lihat! <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </div>
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl dark:text-white">
-              Selamat Datang di{" "}
+              Hai Selamat Datang di{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                Code Academia
+                LogicBase
               </span>
             </h1>
             <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Platform pembelajaran coding yang dirancang untuk mengembangkan
-              kemampuan programming dari tingkat pemula hingga expert.
-              Bergabunglah dengan ribuan developer yang telah memulai journey
-              mereka bersama kami.
+              Tempat seru untuk belajar logika dasar coding! Kita akan belajar
+              cara berpikir komputer melalui materi yang mudah dipahami, lalu
+              menguji pemahaman dengan quiz yang menyenangkan. Bergabunglah
+              dengan ribuan teman-teman lainnya yang sudah mulai belajar logika
+              coding!
             </p>
             <div className="mt-8 flex items-center justify-center gap-x-6">
               <a
                 href="#about"
                 className="rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:from-blue-500 hover:to-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transform hover:scale-105 transition-all duration-200"
               >
-                Jelajahi Platform
+                🎯 Ayo Mulai Belajar!
               </a>
               <a
                 href="#features"
                 className="text-sm font-semibold leading-6 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
-                Lihat Fitur <span aria-hidden="true">→</span>
+                Lihat Fitur Keren <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
@@ -203,37 +206,45 @@ export default function LandingPage() {
         >
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
-              Tentang Code Academia
+              Tentang LogicBase
             </h2>
             <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
-              Code Academia adalah platform pembelajaran coding yang
-              dikembangkan khusus untuk kompetisi Hology Software Development.
-              Kami menyediakan lingkungan belajar yang komprehensif dan
-              interaktif.
+              LogicBase adalah tempat yang super seru untuk anak-anak belajar
+              logika dasar coding! Di sini kita akan belajar cara berpikir
+              seperti programmer melalui materi yang mudah dipahami, lalu
+              menguji pemahaman dengan quiz yang seru!
             </p>
           </div>
 
           <div className="mx-auto mt-8 max-w-2xl sm:mt-12 lg:mt-16 lg:max-w-4xl">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Visi Kami
-                </h3>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="flex items-center justify-center gap-x-3 mb-4">
+                  <HeartIcon className="h-8 w-8 flex-none text-blue-600" />
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Impian Kami
+                  </h3>
+                </div>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Menjadi platform pembelajaran coding terdepan yang dapat
-                  diakses oleh semua kalangan, membantu mengembangkan talenta
-                  digital Indonesia untuk menghadapi era teknologi masa depan.
+                  Kami ingin semua anak-anak di Indonesia bisa belajar logika
+                  dasar coding dengan cara yang menyenangkan! LogicBase dibuat
+                  supaya kalian bisa memahami cara berpikir programmer dan siap
+                  menghadapi masa depan yang penuh teknologi.
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Misi Kami
-                </h3>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="flex items-center justify-center gap-x-3 mb-4">
+                  <RocketLaunchIcon className="h-8 w-8 flex-none text-blue-600" />
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Misi Kami
+                  </h3>
+                </div>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Memberikan pendidikan coding berkualitas tinggi melalui metode
-                  pembelajaran interaktif, praktik langsung, dan dukungan
-                  komunitas yang solid untuk setiap pembelajaran.
+                  Mengajarkan logika dasar coding kepada anak-anak dengan cara
+                  yang seru dan mudah dipahami! Kita akan belajar melalui materi
+                  teks yang menarik, lalu menguji pemahaman dengan quiz
+                  interaktif bersama teman-teman.
                 </p>
               </div>
             </div>
@@ -247,96 +258,97 @@ export default function LandingPage() {
         >
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
-              Fitur Unggulan Platform
+              Fitur-Fitur Keren LogicBase
             </h2>
             <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
-              Code Academia menyediakan berbagai fitur canggih untuk mendukung
-              perjalanan belajar coding Anda dengan pengalaman yang optimal.
+              LogicBase punya sistem belajar yang seru! Kalian akan membaca
+              materi tentang logika coding yang mudah dipahami, lalu menguji
+              pemahaman dengan quiz yang menyenangkan!
             </p>
           </div>
 
           <div className="mx-auto mt-8 max-w-2xl sm:mt-12 lg:mt-16 lg:max-w-none">
             <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-8 lg:max-w-none lg:grid-cols-3">
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                  <AcademicCapIcon className="h-8 w-8 flex-none text-blue-600" />
-                  Dashboard Pembelajaran
-                </dt>
-                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
-                  <p className="flex-auto">
-                    Dashboard yang intuitif untuk melacak progress belajar,
-                    mengakses course, dan melihat achievement yang telah dicapai
-                    selama proses pembelajaran.
-                  </p>
-                </dd>
-              </div>
-
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
                 <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
                   <BookOpenIcon className="h-8 w-8 flex-none text-blue-600" />
-                  Course Management
+                  Materi Logika Coding
                 </dt>
                 <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
                   <p className="flex-auto">
-                    Sistem manajemen course yang terorganisir dengan baik,
-                    memungkinkan akses mudah ke materi pembelajaran dan tracking
-                    progress untuk setiap course.
+                    Materi pembelajaran logika dasar coding yang disusun dengan
+                    bahasa sederhana dan mudah dipahami. Setiap topik dijelaskan
+                    step by step dengan contoh yang menarik.
                   </p>
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
                 <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
                   <TrophyIcon className="h-8 w-8 flex-none text-blue-600" />
-                  Progress Tracking
+                  Quiz Interaktif
                 </dt>
                 <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
                   <p className="flex-auto">
-                    Fitur tracking kemajuan belajar dengan riwayat detail
-                    aktivitas, pencapaian milestone, dan analisis performa untuk
-                    optimalisasi pembelajaran.
+                    Setelah membaca materi, kalian akan mengerjakan quiz untuk
+                    menguji pemahaman. Quiz dibuat menyenangkan dengan berbagai
+                    jenis soal yang menantang!
                   </p>
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
+                  <AcademicCapIcon className="h-8 w-8 flex-none text-blue-600" />
+                  Dashboard Belajar
+                </dt>
+                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
+                  <p className="flex-auto">
+                    Tempat keren untuk melihat progres belajar kalian! Di sini
+                    kalian bisa lihat materi apa saja yang sudah dipelajari dan
+                    skor quiz yang sudah dikerjakan.
+                  </p>
+                </dd>
+              </div>
+
+              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
                 <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
                   <UserGroupIcon className="h-8 w-8 flex-none text-blue-600" />
-                  Support System
+                  Tim Bantuan
                 </dt>
                 <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
                   <p className="flex-auto">
-                    Sistem bantuan yang responsif dengan akses ke dokumentasi,
-                    FAQ, dan support team yang siap membantu mengatasi kendala
-                    pembelajaran.
+                    Ada kakak-kakak yang siap membantu kalau kalian kebingungan
+                    dengan materi! Kalian juga bisa bertanya ke teman-teman lain
+                    yang juga sedang belajar.
                   </p>
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
                 <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
                   <CodeBracketIcon className="h-8 w-8 flex-none text-blue-600" />
-                  Interactive Learning
+                  Belajar Logika Bertahap
                 </dt>
                 <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
                   <p className="flex-auto">
-                    Pembelajaran interaktif dengan hands-on coding experience,
-                    real-time feedback, dan integrated development environment
-                    untuk praktik langsung.
+                    Sistem pembelajaran yang tersusun dari dasar sampai mahir.
+                    Mulai dari konsep sederhana hingga logika yang lebih
+                    kompleks, semua dijelaskan dengan mudah!
                   </p>
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
                 <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
                   <StarIcon className="h-8 w-8 flex-none text-blue-600" />
-                  Personalized Experience
+                  Tracking Pemahaman
                 </dt>
                 <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
                   <p className="flex-auto">
-                    Pengalaman belajar yang dipersonalisasi berdasarkan tingkat
-                    kemampuan, preferensi belajar, dan goal karir yang ingin
-                    dicapai oleh setiap user.
+                    Setiap quiz akan memberikan feedback dan skor untuk melacak
+                    tingkat pemahaman kalian. Kalian bisa melihat progress dan
+                    area yang perlu dipelajari lebih lanjut!
                   </p>
                 </dd>
               </div>
@@ -353,56 +365,57 @@ export default function LandingPage() {
             <div className="mx-auto max-w-2xl lg:max-w-none">
               <div className="text-center">
                 <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
-                  Statistik Platform
+                  📊 Statistik Keren LogicBase
                 </h2>
                 <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
-                  Angka-angka yang menunjukkan kualitas dan pencapaian Code
-                  Academia dalam dunia pendidikan coding
+                  Wah, banyak banget anak-anak yang sudah bergabung dan belajar
+                  logika coding di LogicBase! Lihat angka-angka keren tentang
+                  sistem belajar materi + quiz ini!
                 </p>
               </div>
               <dl className="mt-8 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
                 <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
                   <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
-                    Active Users
+                    👦👧 Anak-Anak Aktif
                   </dt>
                   <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
                     2,500+
                   </dd>
                   <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                    Pengguna aktif bulanan
+                    Anak-anak yang belajar setiap bulan
                   </p>
                 </div>
                 <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
                   <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
-                    Learning Modules
+                    📚 Materi Logika
                   </dt>
                   <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
                     25+
                   </dd>
                   <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                    Modul pembelajaran tersedia
+                    Materi logika coding tersedia
                   </p>
                 </div>
                 <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
                   <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
-                    Completion Rate
+                    ✅ Tingkat Kelulusan Quiz
                   </dt>
                   <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
                     87%
                   </dd>
                   <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                    Tingkat penyelesaian course
+                    Anak-anak yang berhasil lulus quiz
                   </p>
                 </div>
                 <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
                   <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
-                    Satisfaction Rate
+                    😊 Tingkat Kebahagiaan
                   </dt>
                   <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
                     92%
                   </dd>
                   <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                    Tingkat kepuasan pengguna
+                    Anak-anak yang senang belajar di sini
                   </p>
                 </div>
               </dl>
@@ -417,17 +430,17 @@ export default function LandingPage() {
         >
           <div className="mx-auto max-w-2xl text-center" id="contact">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
-              Hubungi Kami
+              📞 Hubungi Kami
             </h2>
             <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
-              Ada pertanyaan tentang Code Academia? Tim kami siap membantu Anda
-              dalam perjalanan belajar coding.
+              Ada pertanyaan atau butuh bantuan? Kakak-kakak di LogicBase siap
+              membantu kalian! Jangan malu untuk bertanya ya!
             </p>
           </div>
 
           <div className="mx-auto mt-8 max-w-4xl">
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center">
                 <div className="mx-auto h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center mb-3">
                   <span className="text-2xl">📧</span>
                 </div>
@@ -435,31 +448,31 @@ export default function LandingPage() {
                   Email
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  support@codeacademia.com
+                  support@logicbase.kids
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center">
                 <div className="mx-auto h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center mb-3">
                   <span className="text-2xl">💬</span>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  Live Chat
+                  Chat Langsung
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  24/7 Customer Support
+                  Kakak-kakak siap membantu 24/7
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center">
                 <div className="mx-auto h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center mb-3">
                   <span className="text-2xl">📚</span>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  Documentation
+                  Panduan Belajar
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Panduan lengkap penggunaan
+                  Buku panduan lengkap untuk anak-anak
                 </p>
               </div>
             </div>
@@ -469,25 +482,25 @@ export default function LandingPage() {
         {/* CTA Section */}
         <div className="mx-auto max-w-2xl text-center py-8 sm:py-12 pb-6">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
-            Mulai Journey Coding Anda
+            🚀 Yuk Mulai Petualangan Coding!
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-lg leading-8 text-gray-600 dark:text-gray-300">
-            Bergabunglah dengan Code Academia dan rasakan pengalaman belajar
-            coding yang berbeda. Daftar sekarang untuk mengakses semua fitur
-            pembelajaran kami.
+            Bergabunglah dengan LogicBase dan rasakan serunya belajar logika
+            coding! Baca materi yang menarik, kerjakan quiz yang seru, dan mulai
+            petualangan belajar logika bersama teman-teman lainnya.
           </p>
           <div className="mt-6 flex items-center justify-center gap-x-6">
             <a
               href="/signup"
               className="rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-lg hover:from-blue-500 hover:to-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transform hover:scale-105 transition-all duration-200"
             >
-              Daftar Sekarang
+              🎯 Daftar Sekarang!
             </a>
             <a
               href="/login"
               className="text-base font-semibold leading-7 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              Sudah punya akun? Login <span aria-hidden="true">→</span>
+              Sudah punya akun? Masuk Yuk! <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>
