@@ -2,7 +2,10 @@ import { useNavigate } from "react-router-dom";
 
 const materiList = [
   {
-    title: "Percabangan", color: "bg-[#A2D1B0]", progress: "20%", icon: (
+    title: "Percabangan",
+    color: "bg-[#A2D1B0]",
+    progress: "20%",
+    icon: (
       <svg
         className="w-24 h-24 mb-2 text-white mx-auto"
         viewBox="0 0 512 512"
@@ -16,7 +19,10 @@ const materiList = [
     ),
   },
   {
-    title: "Perulangan", color: "bg-[#77B1E3]", progress: "50%", icon: (
+    title: "Perulangan",
+    color: "bg-[#77B1E3]",
+    progress: "50%",
+    icon: (
       <svg
         className="w-24 h-24 mb-2 text-white mx-auto"
         viewBox="0 0 24 24"
@@ -30,7 +36,10 @@ const materiList = [
     ),
   },
   {
-    title: "Perbandingan", color: "bg-[#F1AD8D]", progress: "80%", icon: (
+    title: "Perbandingan",
+    color: "bg-[#F1AD8D]",
+    progress: "80%",
+    icon: (
       <svg
         className="w-24 h-24 mb-2 text-white mx-auto"
         viewBox="0 0 448 512"
@@ -44,7 +53,10 @@ const materiList = [
     ),
   },
   {
-    title: "Aritmatika", color: "bg-[#A9A6E5]", progress: "100%", icon: (
+    title: "Aritmatika",
+    color: "bg-[#A9A6E5]",
+    progress: "100%",
+    icon: (
       <svg
         className="w-24 h-24 mb-2 text-white mx-auto"
         viewBox="0 0 512 512"
@@ -58,7 +70,10 @@ const materiList = [
     ),
   },
   {
-    title: "Logika", color: "bg-[#A2CFD1]", progress: "20%", icon: (
+    title: "Logika",
+    color: "bg-[#A2CFD1]",
+    progress: "20%",
+    icon: (
       <svg
         className="w-24 h-24 mb-2 text-white mx-auto"
         viewBox="0 0 24 24"
@@ -70,15 +85,17 @@ const materiList = [
       >
         <path
           fillRule="evenodd"
-          d="M22 12h-4M2 9h5m-5 6h5M6 5c10.667 2.1 10.667 12.6 0 14q2.709-7 0-14" />
-        <path
-          fillRule="evenodd"
-          d="M14 12a2 2 0 1 0 4 0a2 2 0 1 0-4 0" />
+          d="M22 12h-4M2 9h5m-5 6h5M6 5c10.667 2.1 10.667 12.6 0 14q2.709-7 0-14"
+        />
+        <path fillRule="evenodd" d="M14 12a2 2 0 1 0 4 0a2 2 0 1 0-4 0" />
       </svg>
     ),
   },
   {
-    title: "Struktur Dasar", color: "bg-[#E37777]", progress: "50%", icon: (
+    title: "Struktur Dasar",
+    color: "bg-[#E37777]",
+    progress: "50%",
+    icon: (
       <svg
         className="w-24 h-24 mb-2 text-white mx-auto"
         viewBox="0 0 24 24"
@@ -103,7 +120,15 @@ export default function Course() {
 
   return (
     <div className="p-7">
-      <h1 className="text-2xl font-bold mb-6">Jelajahi Materi</h1>
+      <div className="flex">
+        <h1 className="text-2xl font-bold mb-6">Jelajahi Materi </h1>
+        <span className="-mt-5 -ml-8 h-10">
+          <img
+            src="../../../public/Icon Kobi (maskot LogicBase)/kobiMelambai.svg"
+            className="w-32"
+          />
+        </span>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
         {materiList.map((item) => (
           <div
@@ -112,7 +137,9 @@ export default function Course() {
             className={`${item.color} p-6 rounded-lg shadow-md cursor-pointer max-w-52 text-center content-center justify-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:rotate-1`}
           >
             {item.icon && item.icon}
-            <h2 className="text-lg font-semibold mb-2 text-white">{item.title}</h2>
+            <h2 className="text-lg font-semibold mb-2 text-white">
+              {item.title}
+            </h2>
             <p className="text-sm text-white">{item.progress} Selesai</p>
             <div className="w-full bg-gray-200 h-2 mt-2 rounded">
               <div
