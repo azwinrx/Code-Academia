@@ -10,7 +10,7 @@ export default function Sidebar() {
     { to: "/beranda", label: "Beranda", img: "../../../public/beranda.png" },
     { to: "/materi", label: "Materi", img: "../../../public/materi.png" },
     { to: "/riwayat", label: "Riwayat", img: "../../../public/riwayat.png" },
-    { to: "/bantuan", label: "Bantuan", img: "../../../public/bantuan.png" },
+    { to: "/bantuan", label: "Bantuan", img: "../../../public/forum.png" },
   ];
 
   const handleLogout = async () => {
