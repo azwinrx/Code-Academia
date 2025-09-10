@@ -19,7 +19,7 @@ import Success from "./components/Layout/succestest.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import CoursePage from "./pages/CoursePage.jsx";
 import RiwayatPage from "./pages/RiwayatPage.jsx";
-import BantuanPage from "./pages/BantuanPage.jsx";
+import BantuanPage from "./pages/ForumPage.jsx";
 import MateriDetailPage from "./pages/MateriDetailPage.jsx";
 import ProtectedRoute from "./components/Fragments/ProtectedRoute.jsx";
 import RedirectIfAuthenticated from "./components/Fragments/RedirectIfAuthenticated.jsx";
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
   { path: "/materi", element: <ProtectedRoute><CoursePage /></ProtectedRoute> },
   { path: "/materi/:slug", element: <ProtectedRoute><MateriDetailPage /></ProtectedRoute> },
   { path: "/riwayat", element: <ProtectedRoute><RiwayatPage /></ProtectedRoute> },
-  { path: "/bantuan", element: <ProtectedRoute><BantuanPage /></ProtectedRoute> },
+  { path: "/forum", element: <ProtectedRoute><BantuanPage /></ProtectedRoute> },
 ]);
 
 // Render Aplikasi (tidak perlu diubah)

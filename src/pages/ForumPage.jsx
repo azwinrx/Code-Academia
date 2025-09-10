@@ -1,9 +1,9 @@
 
-import Bantuan from "../components/Fragments/Bantuan";
+import Bantuan from "../components/Fragments/Forum";
 import Dashboard from "../components/Layout/Dashboard";
 
 
-export default function BantuanPage(){
+export default function ForumPage(){
     return(
         <Dashboard>
         <Bantuan/>
