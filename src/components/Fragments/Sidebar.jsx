@@ -10,7 +10,7 @@ export default function Sidebar() {
     { to: "/beranda", label: "Beranda", img: "../../../public/beranda.png" },
     { to: "/materi", label: "Materi", img: "../../../public/materi.png" },
     { to: "/riwayat", label: "Riwayat", img: "../../../public/riwayat.png" },
-    { to: "/bantuan", label: "Bantuan", img: "../../../public/forum.png" },
+    { to: "/forum", label: "Forum", img: "../../../public/forum.png" },
   ];
 
   const handleLogout = async () => {
@@ -21,7 +21,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-60 h-screen bg-[#132238] text-white flex flex-col p-4 fixed z-20">
-      <div className="flex items-center">
+      <div className="flex items-center -ml-5 -mt-1">
         <img
           src="../../../public/Icon Kobi (maskot LogicBase)/kobiMelambai.svg"
           className="w-24"
@@ -37,7 +37,7 @@ export default function Sidebar() {
               `flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200
               ${
                 isActive
-                  ? "bg-white text-[#132238] font-semibold"
+                  ? "bg-slate-400 text-[#132238] font-semibold"
                   : "hover:text-gray-300"
               }`
             }
