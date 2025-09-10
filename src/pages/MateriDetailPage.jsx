@@ -63,7 +63,7 @@ export default function MateriDetailPage() {
     <div className="flex h-screen bg-slate-900 text-white">
       <aside className="w-80 bg-[#132238] flex flex-col h-screen fixed left-0 top-0 z-30 shadow-2xl">
         <div className="p-5 border-b border-slate-700/50">
-          <button onClick={() => navigate("/materi")} className="flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors mb-4">
+          <button onClick={() => navigate("/materi")} className="flex items-center gap-2 text-sm text-slate-300 hover:text-white hover:cursor-pointer hover:bg-slate-700 transition-colors mb-4 border-none">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
             <span>All Courses</span>
           </button>
@@ -74,7 +74,7 @@ export default function MateriDetailPage() {
           <ul className="space-y-1">
             {subMateriList.map((sub) => (
               <li key={sub.id}>
-                <button onClick={() => setActiveSubMateri(sub)} className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all duration-200 ${activeSubMateri?.id === sub.id ? "bg-sky-600/80 shadow-md" : "hover:bg-slate-700/50"}`}>
+                <button onClick={() => setActiveSubMateri(sub)} className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all duration-200 border-none ${activeSubMateri?.id === sub.id ? "bg-sky-600/80 shadow-md border-none" : "hover:bg-slate-700/50"}`}>
                   <img
                     src={completedIds.has(sub.id) ? "/check.png" : "/pending.png"}
                     className="w-5 h-5 flex-shrink-0"
@@ -110,9 +110,9 @@ export default function MateriDetailPage() {
                 dangerouslySetInnerHTML={{ __html: activeSubMateri.konten }}
               />
               {!completedIds.has(activeSubMateri.id) && (
-                <button 
+                <button
                   onClick={handleMarkComplete}
-                  className="mt-8 bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors w-full md:w-auto flex items-center justify-center gap-2"
+                  className="mt-8 bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-800 transition-colors w-full md:w-auto flex items-center justify-center gap-2 border-none"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                   Mark as Complete

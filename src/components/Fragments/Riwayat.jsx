@@ -70,10 +70,11 @@ export default function Riwayat() {
       async function loadCourses() {
         // Set loading to true only if there are no courses yet
         if (courses.length === 0) {
-            setLoading(true);
+          setLoading(true);
         }
         const coursesData = await getCoursesWithProgress(user.id);
-        setCourses(coursesData);
+        const finishedOnly = coursesData.filter(c => c.progress === 100);
+        setCourses(finishedOnly);
         setLoading(false);
       }
       loadCourses();
@@ -86,16 +87,16 @@ export default function Riwayat() {
 
   return (
     <div className="p-6 sm:p-8">
-      <h1 className="text-3xl font-bold mb-8 text-white">Riwayat Aktivitas</h1>
+      <h1 className="text-3xl font-bold mb-8 text-black">Riwayat Aktivitas</h1>
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : courses.length === 0 ? (
-        <div className="text-center py-16 bg-slate-800/50 ring-1 ring-slate-700 rounded-xl">
-          <h3 className="text-xl font-semibold text-white">No Activity Yet</h3>
-          <p className="text-slate-400 mt-2">Start a course to see your history here.</p>
+        <div style={{ backgroundColor: pastelColors[2] }} className="text-center py-16 rounded-xl">
+          <h3 className="text-xl font-semibold text-black">Belum ada materi yang selesai bro</h3>
+          <p className="text-slate-800 mt-2">Mulai kursus untuk melihat riwayat Anda di sini.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -117,12 +118,12 @@ export default function Riwayat() {
                   <span className="text-sm font-semibold text-slate-800">{course.progress}%</span>
                 </div>
               </div>
-              <div 
+              <div
                 style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
                 className="px-6 py-4 rounded-b-xl"
               >
                 <div className="w-full flex justify-center items-center gap-2 text-sm font-semibold text-white">
-                  {course.status === 'Completed' ? 'Review Course' : 'Continue Learning'}
+                  {course.status === 'Completed' ? 'Review Materi' : 'Lanjutkan Belajar'}
                   <ArrowRightIcon className="w-4 h-4" />
                 </div>
               </div>
