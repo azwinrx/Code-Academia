@@ -35,7 +35,7 @@ export async function getMateriBySlug(slug) {
 export async function getSubMateriByMateriId(materiId) {
   const { data, error } = await supabase
     .from("sub_materi")
-    .select("id, judul, konten, tipe, urutan")
+    .select("id, judul, markdown_content, tipe, urutan")
     .eq("materi_id", materiId)
     .order("urutan", { ascending: true });
 
@@ -61,10 +61,10 @@ export async function addProgress(userId, subMateriId) {
     .select();
 
   // Ignore duplicate errors (code 23505), as it just means progress already exists.
-  if (error && error.code !== '23505') {
+  if (error && error.code !== "23505") {
     console.error("Error adding progress:", error);
   }
-  
+
   return { data, error };
 }
 
@@ -74,35 +74,36 @@ export async function addProgress(userId, subMateriId) {
  * @param {string} userId - The ID of the user.
  */
 export async function getMateriDetailWithProgress(slug, userId) {
-    const { data: materi, error: materiError } = await supabase
-        .from("judul_Materi")
-        .select("*")
-        .eq("slug", slug)
-        .single();
+  const { data: materi, error: materiError } = await supabase
+    .from("judul_Materi")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
-    if (materiError) throw new Error(materiError.message);
-    if (!materi) return { materi: null, subMateriList: [], completedIds: new Set() };
+  if (materiError) throw new Error(materiError.message);
+  if (!materi)
+    return { materi: null, subMateriList: [], completedIds: new Set() };
 
-    const { data: subMateriList, error: subMateriError } = await supabase
-        .from("sub_materi")
-        .select("*")
-        .eq("materi_id", materi.id)
-        .order("urutan", { ascending: true });
-    
-    if (subMateriError) throw new Error(subMateriError.message);
+  const { data: subMateriList, error: subMateriError } = await supabase
+    .from("sub_materi")
+    .select("id, judul, markdown_content, tipe, urutan")
+    .eq("materi_id", materi.id)
+    .order("urutan", { ascending: true });
 
-    const subMateriIds = subMateriList.map(s => s.id);
-    const { data: progress, error: progressError } = await supabase
-        .from("user_progress")
-        .select("sub_materi_id")
-        .eq("user_id", userId)
-        .in("sub_materi_id", subMateriIds);
+  if (subMateriError) throw new Error(subMateriError.message);
 
-    if (progressError) throw new Error(progressError.message);
+  const subMateriIds = subMateriList.map((s) => s.id);
+  const { data: progress, error: progressError } = await supabase
+    .from("user_progress")
+    .select("sub_materi_id")
+    .eq("user_id", userId)
+    .in("sub_materi_id", subMateriIds);
 
-    const completedIds = new Set(progress.map(p => p.sub_materi_id));
+  if (progressError) throw new Error(progressError.message);
 
-    return { materi, subMateriList, completedIds };
+  const completedIds = new Set(progress.map((p) => p.sub_materi_id));
+
+  return { materi, subMateriList, completedIds };
 }
 
 /**
@@ -110,35 +111,48 @@ export async function getMateriDetailWithProgress(slug, userId) {
  * @param {string} userId - The ID of the user.
  */
 export async function getCoursesWithProgress(userId) {
-    const { data: courses, error: coursesError } = await supabase
-        .from("judul_Materi")
-        .select("id, nama_materi, deskripsi, slug, sub_materi(id)")
-        .order("urutan", { ascending: true });
+  const { data: courses, error: coursesError } = await supabase
+    .from("judul_Materi")
+    .select("id, nama_materi, deskripsi, slug, sub_materi(id)")
+    .order("urutan", { ascending: true });
 
-    if (coursesError) throw new Error(coursesError.message);
+  if (coursesError) throw new Error(coursesError.message);
 
-    const { data: userProgress, error: progressError } = await supabase
-        .from("user_progress")
-        .select("sub_materi_id")
-        .eq("user_id", userId);
+  const { data: userProgress, error: progressError } = await supabase
+    .from("user_progress")
+    .select("sub_materi_id")
+    .eq("user_id", userId);
 
-    if (progressError) throw new Error(progressError.message);
-    
-    const completedIds = new Set(userProgress.map(p => p.sub_materi_id));
+  if (progressError) throw new Error(progressError.message);
 
-    const coursesWithProgress = courses.map(course => {
-        const totalSubMateri = course.sub_materi.length;
-        if (totalSubMateri === 0) {
-            return { ...course, progress: 0 };
-        }
-        
-        const completedCount = course.sub_materi.filter(s => completedIds.has(s.id)).length;
-        const progressPercentage = Math.round((completedCount / totalSubMateri) * 100);
-        
-        delete course.sub_materi;
+  const completedIds = new Set(userProgress.map((p) => p.sub_materi_id));
 
-        return { ...course, progress: progressPercentage, status: progressPercentage === 100 ? "Completed" : (progressPercentage > 0 ? "In Progress" : "Not Started") };
-    });
+  const coursesWithProgress = courses.map((course) => {
+    const totalSubMateri = course.sub_materi.length;
+    if (totalSubMateri === 0) {
+      return { ...course, progress: 0 };
+    }
 
-    return coursesWithProgress;
+    const completedCount = course.sub_materi.filter((s) =>
+      completedIds.has(s.id)
+    ).length;
+    const progressPercentage = Math.round(
+      (completedCount / totalSubMateri) * 100
+    );
+
+    delete course.sub_materi;
+
+    return {
+      ...course,
+      progress: progressPercentage,
+      status:
+        progressPercentage === 100
+          ? "Completed"
+          : progressPercentage > 0
+          ? "In Progress"
+          : "Not Started",
+    };
+  });
+
+  return coursesWithProgress;
 }
