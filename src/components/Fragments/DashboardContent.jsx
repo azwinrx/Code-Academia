@@ -157,7 +157,7 @@ export default function DashboardContent() {
       <section id="kursus-saya" className="mt-8">
         <h3 className="text-2xl font-bold text-black">Materi Saya</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-          {courses.map((course, index) => (
+          {courses.filter(course => course.progress > 0).map((course, index) => (
             <div
               key={course.id}
               style={{ backgroundColor: pastelColors[index % pastelColors.length] }}
