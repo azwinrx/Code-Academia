@@ -3,7 +3,10 @@ export default function Header() {
     <header className="w-full bg-[#132238] text-white p-4 flex items-center justify-between fixed z-10">
       <div className="flex-1"></div>
       <div className="flex items-center gap-4">
-        <img src="../../../public/Icon Kobi (maskot LogicBase)/KobiMengajak.svg" className="h-24 absolute right-52" />
+        <img
+          src="/Icon Kobi (maskot LogicBase)/KobiMengajak.svg"
+          className="h-24 absolute right-52"
+        />
         <input
           type="text"
           placeholder="Search..."

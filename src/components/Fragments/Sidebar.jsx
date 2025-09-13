@@ -7,10 +7,10 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const menu = [
-    { to: "/beranda", label: "Beranda", img: "../../../public/beranda.png" },
-    { to: "/materi", label: "Materi", img: "../../../public/materi.png" },
-    { to: "/riwayat", label: "Riwayat", img: "../../../public/riwayat.png" },
-    { to: "/forum", label: "Forum", img: "../../../public/forum.png" },
+    { to: "/beranda", label: "Beranda", img: "/beranda.png" },
+    { to: "/materi", label: "Materi", img: "/materi.png" },
+    { to: "/riwayat", label: "Riwayat", img: "/riwayat.png" },
+    { to: "/forum", label: "Forum", img: "/forum.png" },
   ];
 
   const handleLogout = async () => {
@@ -23,7 +23,7 @@ export default function Sidebar() {
     <aside className="w-60 h-screen bg-[#132238] text-white flex flex-col p-4 fixed z-20">
       <div className="flex items-center -ml-5 -mt-1">
         <img
-          src="../../../public/Icon Kobi (maskot LogicBase)/kobiMelambai.svg"
+          src="/Icon Kobi (maskot LogicBase)/kobiMelambai.svg"
           className="w-24"
         />
         <h1 className="text-3xl  font-bold -ml-8">LogicBase</h1>
