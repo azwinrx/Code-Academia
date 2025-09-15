@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getThreadById, getThreadComments, addComment, incrementViewCount, toggleThreadLike, getUserLikedThreads } from '../helper/supabaseForum';
 import { useAuth } from '../helper/authUtils';
 import { useToast } from '../hooks/useToast.jsx';
@@ -10,6 +10,19 @@ export default function ThreadDetailPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { success, error: toastError } = useToast();
+  const location = useLocation();
+  const { color } = location.state || {};
+
+  const getButtonColor = (backgroundColor) => {
+    const colorMap = {
+      'bg-[#F1AD8D]': 'bg-orange-800',
+      'bg-[#A9A6E5]': 'bg-purple-800',
+      'bg-[#A2D1B0]': 'bg-green-800',
+    };
+    return colorMap[backgroundColor] || 'bg-[#77B1E3]'; // fallback color
+  };
+
+  const buttonColor = getButtonColor(color);
 
   const [thread, setThread] = useState(null);
   const [comments, setComments] = useState([]);
@@ -236,13 +249,13 @@ export default function ThreadDetailPage() {
           {/* Back Button */}
           <button
             onClick={() => navigate('/forum')}
-            className="mb-6 flex items-center text-sm font-bold text-black bg-[#77B1E3] hover:bg-[#5A9BD3] transition-colors"
+            className={`mb-6 flex items-center text-sm font-bold text-white ${buttonColor} hover:opacity-90 transition-colors px-4 py-2 rounded-lg`}
           >
             ← Kembali ke Forum
           </button>
 
           {/* Thread Content */}
-          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 mb-6">
+          <div className={`${color || 'bg-white'} rounded-xl shadow-lg p-6 lg:p-8 mb-6`}>
             {/* Thread Header */}
             <div className="flex items-start gap-4 mb-6">
               <div className="flex-shrink-0">
@@ -269,14 +282,14 @@ export default function ThreadDetailPage() {
                     👁️ {thread.view_count || 0} dilihat
                   </span>
                   <span>•</span>
-                  <button
+                  <div
                     onClick={handleLike}
                     disabled={likingThreads[thread.id]}
-                    className={`flex items-center gap-1 transition-all duration-200 ${
+                    className={`flex items-center gap-1 transition-all -ml-2 cursor-pointer duration-200 px-3 py-1 rounded-md ${
                       likedThreads[thread.id]
                         ? 'text-red-500 hover:text-red-600'
                         : 'text-[#333] hover:text-red-500'
-                    } disabled:opacity-50 disabled:cursor-not-allowed bg-[#76b0e3] border-none`}
+                    } disabled:opacity-50 disabled:cursor-not-allowed ${color || 'bg-white'} border-none`}
                   >
                     {likingThreads[thread.id] ? (
                       <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
@@ -286,10 +299,12 @@ export default function ThreadDetailPage() {
                       '🤍'
                     )}
                     <span>{thread.like_count || 0}</span>
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <hr className="my-4 border-gray-500 border-2 rounded-md" />
 
             {/* Thread Body */}
             <div className="prose max-w-none mb-6">
@@ -326,7 +341,7 @@ export default function ThreadDetailPage() {
           </div>
 
           {/* Comments Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8">
+          <div className={`${color || 'bg-white'} rounded-xl shadow-lg p-6 lg:p-8`}>
             <h2 className="text-xl font-bold text-[#333] mb-6">
               Komentar ({comments.length})
             </h2>
@@ -355,7 +370,7 @@ export default function ThreadDetailPage() {
                       <button
                         type="submit"
                         disabled={submittingComment || !commentContent.trim()}
-                        className="px-6 py-2 bg-[#77B1E3] text-white rounded-lg hover:bg-[#5A9BD3] disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`px-6 py-2 ${buttonColor} text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         {submittingComment ? 'Mengirim...' : 'Kirim Komentar'}
                       </button>
