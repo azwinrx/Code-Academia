@@ -28,7 +28,18 @@ const Success = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen w-full bg-[#669DBD]">
+    <div
+      className="flex justify-center items-center min-h-screen w-full"
+      style={{
+        backgroundColor: "#0c0a18",
+        backgroundImage: `
+      radial-gradient(circle at 80% 70%, rgba(47, 72, 133, 0.3), transparent 40%),
+      radial-gradient(circle at 20% 20%, rgba(68, 47, 133, 0.4), transparent 40%)
+    `,
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="m-10 w-full max-w-md p-8 bg-slate-800 rounded-lg shadow-lg text-white">
         <h2 className="text-center text-2xl font-semibold mb-6">SUCCESS</h2>
 

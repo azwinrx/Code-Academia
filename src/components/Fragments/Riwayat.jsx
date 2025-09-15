@@ -1,18 +1,18 @@
-import { useContext, useState, useEffect } from 'react';
-import { ArrowRightIcon } from '@heroicons/react/24/solid';
-import { AuthContext } from '../../helper/authUtils';
-import { getCoursesWithProgress } from '../../helper/supabaseMateri';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from "react";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { AuthContext } from "../../helper/authUtils";
+import { getCoursesWithProgress } from "../../helper/supabaseMateri";
+import { useNavigate } from "react-router-dom";
 
 // Re-usable components defined within the file
 
 const pastelColors = [
-  '#A2D1B0',
-  '#77B1E3',
-  '#F1AD8D',
-  '#A9A6E5',
-  '#A2CFD1',
-  '#E37777',
+  "#A2D1B0",
+  "#77B1E3",
+  "#F1AD8D",
+  "#A9A6E5",
+  "#A2CFD1",
+  "#E37777",
 ];
 
 const ProgressBar = ({ progress }) => (
@@ -28,9 +28,14 @@ const StatusBadge = ({ status }) => {
   const baseStyle = "px-3 py-1 text-xs font-semibold rounded-full";
   let specificStyle = "";
   switch (status) {
-    case "Completed": specificStyle = "bg-green-800/20 text-green-900"; break;
-    case "In Progress": specificStyle = "bg-sky-800/20 text-sky-900"; break;
-    default: specificStyle = "bg-slate-800/20 text-slate-900";
+    case "Completed":
+      specificStyle = "bg-green-800/20 text-green-900";
+      break;
+    case "In Progress":
+      specificStyle = "bg-sky-800/20 text-sky-900";
+      break;
+    default:
+      specificStyle = "bg-slate-800/20 text-slate-900";
   }
   return <span className={`${baseStyle} ${specificStyle}`}>{status}</span>;
 };
@@ -73,7 +78,7 @@ export default function Riwayat() {
           setLoading(true);
         }
         const coursesData = await getCoursesWithProgress(user.id);
-        const finishedOnly = coursesData.filter(c => c.progress === 100);
+        const finishedOnly = coursesData.filter((c) => c.progress === 100);
         setCourses(finishedOnly);
         setLoading(false);
       }
@@ -91,39 +96,58 @@ export default function Riwayat() {
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
+          {[...Array(3)].map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       ) : courses.length === 0 ? (
-        <div style={{ backgroundColor: pastelColors[2] }} className="text-center py-16 rounded-xl">
-          <h3 className="text-xl font-semibold text-black">Belum ada materi yang selesai bro</h3>
-          <p className="text-slate-800 mt-2">Mulai kursus untuk melihat riwayat Anda di sini.</p>
+        <div
+          style={{ backgroundColor: pastelColors[2] }}
+          className="text-center py-16 rounded-xl"
+        >
+          <h3 className="text-xl font-semibold text-black">
+            Belum ada materi yang selesai bro
+          </h3>
+          <p className="text-slate-800 mt-2">
+            Mulai kursus untuk melihat riwayat Anda di sini.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course, index) => (
             <div
               key={course.id}
-              style={{ backgroundColor: pastelColors[index % pastelColors.length] }}
+              style={{
+                backgroundColor: pastelColors[index % pastelColors.length],
+              }}
               className="rounded-xl shadow-lg flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl cursor-pointer"
               onClick={() => handleCourseClick(course.slug)}
             >
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-bold text-slate-800">{course.nama_materi}</h2>
+                  <h2 className="text-xl font-bold text-slate-800">
+                    {course.nama_materi}
+                  </h2>
                   <StatusBadge status={course.status} />
                 </div>
-                <p className="text-sm text-slate-700 mb-6 h-10">{course.deskripsi || 'No description available.'}</p>
+                <p className="text-sm text-slate-700 mb-6 h-10">
+                  {course.deskripsi || "No description available."}
+                </p>
                 <div className="flex items-center gap-3">
                   <ProgressBar progress={course.progress} />
-                  <span className="text-sm font-semibold text-slate-800">{course.progress}%</span>
+                  <span className="text-sm font-semibold text-slate-800">
+                    {course.progress}%
+                  </span>
                 </div>
               </div>
               <div
-                style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
+                style={{ backgroundColor: "rgba(0,0,0,0.1)" }}
                 className="px-6 py-4 rounded-b-xl"
               >
                 <div className="w-full flex justify-center items-center gap-2 text-sm font-semibold text-white">
-                  {course.status === 'Completed' ? 'Review Materi' : 'Lanjutkan Belajar'}
+                  {course.status === "Completed"
+                    ? "Review Materi"
+                    : "Lanjutkan Belajar"}
                   <ArrowRightIcon className="w-4 h-4" />
                 </div>
               </div>
