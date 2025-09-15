@@ -11,14 +11,68 @@ const ResetPasswordConfirm = () => {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  // Check for the hash fragment from the URL
+  // Check for the hash fragment from the URL and handle session
   useEffect(() => {
-    // The hash contains the access token when coming from a reset password email
-    const hash = window.location.hash;
-    if (!hash) {
-      setError("Invalid or expired reset link. Please try again.");
-      showToast("Invalid or expired reset link. Please try again.", "error");
-    }
+    const handleAuthSession = async () => {
+      // Check URL hash for tokens (from email link)
+      const hash = window.location.hash;
+      console.log("URL hash:", hash);
+      console.log("Full URL:", window.location.href);
+
+      if (hash && hash.includes("access_token")) {
+        // Extract session from URL hash
+        const hashParams = new URLSearchParams(hash.substring(1));
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+
+        console.log("Access token found:", !!accessToken);
+        console.log("Refresh token found:", !!refreshToken);
+
+        if (accessToken && refreshToken) {
+          try {
+            // Set session from URL parameters
+            const { data, error } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+
+            if (error) {
+              console.error("Session error:", error);
+              setError("Invalid or expired reset link. Please try again.");
+              showToast(
+                "Invalid or expired reset link. Please try again.",
+                "error"
+              );
+            } else {
+              console.log("Session set successfully:", data);
+              // Clear the URL hash for security
+              window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+              );
+            }
+          } catch (err) {
+            console.error("Error setting session:", err);
+            setError("Invalid or expired reset link. Please try again.");
+            showToast(
+              "Invalid or expired reset link. Please try again.",
+              "error"
+            );
+          }
+        } else {
+          setError("Invalid reset link format. Please try again.");
+          showToast("Invalid reset link format. Please try again.", "error");
+        }
+      } else {
+        // No hash parameters found
+        console.log("No hash parameters found in URL");
+        setError("Invalid or expired reset link. Please try again.");
+        showToast("Invalid or expired reset link. Please try again.", "error");
+      }
+    };
+
+    handleAuthSession();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -49,8 +103,14 @@ const ResetPasswordConfirm = () => {
 
       if (error) throw error;
 
+      // Sign out the user to force them to login with new password
+      await supabase.auth.signOut();
+
       setSuccess(true);
-      showToast("Password has been reset successfully!", "success");
+      showToast(
+        "Password has been reset successfully! Please login with your new password.",
+        "success"
+      );
 
       // Redirect to login after a delay
       setTimeout(() => {
@@ -65,7 +125,18 @@ const ResetPasswordConfirm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen w-full bg-[#669DBD]">
+    <div
+      className="flex justify-center items-center min-h-screen w-full"
+      style={{
+        backgroundColor: "#0c0a18",
+        backgroundImage: `
+      radial-gradient(circle at 80% 70%, rgba(47, 72, 133, 0.3), transparent 40%),
+      radial-gradient(circle at 20% 20%, rgba(68, 47, 133, 0.4), transparent 40%)
+    `,
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="m-10 w-full max-w-md p-8 bg-slate-800 rounded-lg shadow-lg text-white">
         <h2 className="text-center text-2xl font-semibold mb-6">
           Reset Your Password
@@ -74,8 +145,8 @@ const ResetPasswordConfirm = () => {
         {success ? (
           <div className="text-center">
             <div className="text-green-500 mb-4">
-              Your password has been reset successfully! You will be redirected
-              to the login page shortly.
+              Your password has been reset successfully! Please login with your
+              new password.
             </div>
             <button
               onClick={() => navigate("/login")}
