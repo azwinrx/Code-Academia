@@ -151,6 +151,7 @@ export async function createThread(threadData) {
 
       // Upload image to Supabase Storage
       const fileName = `${Date.now()}_${threadData.image.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+      
       const { error: uploadError } = await supabase
         .storage
         .from('forum-images')
@@ -161,7 +162,23 @@ export async function createThread(threadData) {
 
       if (uploadError) {
         console.error('Error uploading image:', uploadError);
-        // Continue without image if upload fails (don't throw error)
+        
+        // Check if bucket doesn't exist
+        if (uploadError.message.includes('bucket') && uploadError.message.includes('not found')) {
+          console.error('❌ Storage bucket "forum-images" tidak ditemukan.');
+          console.error('ℹ️ Silakan buat bucket "forum-images" di Supabase Dashboard -> Storage');
+        }
+        
+        // Check for RLS (Row Level Security) policy error
+        if (uploadError.message.includes('row-level security policy')) {
+          console.error('❌ RLS (Row Level Security) Policy Error:');
+          console.error('ℹ️ Bucket sudah dibuat tapi policies belum dikonfigurasi');
+          console.error('ℹ️ Buka Supabase Dashboard -> Storage -> forum-images -> Policies');
+          console.error('ℹ️ Pilih: "Disable RLS" atau setup policies manual');
+          console.error('ℹ️ Lihat file SETUP_STORAGE_BUCKET.md untuk instruksi detail');
+        }
+        
+        // Continue without image if upload fails
         console.warn('Gambar tidak dapat diupload, melanjutkan tanpa gambar');
       } else {
         // Get public URL if upload successful
@@ -228,8 +245,134 @@ export const incrementViewCount = async (threadId) => {
   }
 };
 
-// Update thread like count
+// Check if user has liked a thread
+export const getUserLikeStatus = async (threadId, userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('forum_likes')
+      .select('id')
+      .eq('thread_id', threadId)
+      .eq('user_id', userId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+      console.error('Error checking user like status:', error);
+      throw error;
+    }
+
+    return !!data; // Return true if like exists, false otherwise
+  } catch (error) {
+    console.error('Error in getUserLikeStatus:', error);
+    throw error;
+  }
+};
+
+// Get user's liked threads
+export const getUserLikedThreads = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('forum_likes')
+      .select('thread_id')
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error fetching user liked threads:', error);
+      throw error;
+    }
+
+    return data.map(like => like.thread_id);
+  } catch (error) {
+    console.error('Error in getUserLikedThreads:', error);
+    throw error;
+  }
+};
+
+// Toggle thread like for a user
+export const toggleThreadLike = async (threadId, userId) => {
+  try {
+    // Check if user already liked the thread
+    const hasLiked = await getUserLikeStatus(threadId, userId);
+    
+    if (hasLiked) {
+      // Remove like
+      const { error } = await supabase
+        .from('forum_likes')
+        .delete()
+        .eq('thread_id', threadId)
+        .eq('user_id', userId);
+
+      if (error) {
+        console.error('Error removing like:', error);
+        throw error;
+      }
+
+      // Update thread like count using direct SQL approach
+      const { error: updateError } = await supabase
+        .from('forum_threads')
+        .update({ like_count: supabase.sql`GREATEST(COALESCE(like_count, 0) - 1, 0)` })
+        .eq('id', threadId);
+
+      if (updateError) {
+        console.error('Error decrementing like count:', updateError);
+        throw updateError;
+      }
+
+      return { action: 'removed', newCount: await getThreadLikeCount(threadId) };
+    } else {
+      // Add like
+      const { error } = await supabase
+        .from('forum_likes')
+        .insert([{ thread_id: threadId, user_id: userId }]);
+
+      if (error) {
+        console.error('Error adding like:', error);
+        throw error;
+      }
+
+      // Update thread like count using direct SQL approach
+      const { error: updateError } = await supabase
+        .from('forum_threads')
+        .update({ like_count: supabase.sql`COALESCE(like_count, 0) + 1` })
+        .eq('id', threadId);
+
+      if (updateError) {
+        console.error('Error incrementing like count:', updateError);
+        throw updateError;
+      }
+
+      return { action: 'added', newCount: await getThreadLikeCount(threadId) };
+    }
+  } catch (error) {
+    console.error('Error in toggleThreadLike:', error);
+    throw error;
+  }
+};
+
+// Get thread like count
+export const getThreadLikeCount = async (threadId) => {
+  try {
+    const { data, error } = await supabase
+      .from('forum_threads')
+      .select('like_count')
+      .eq('id', threadId)
+      .single();
+
+    if (error) {
+      console.error('Error getting thread like count:', error);
+      throw error;
+    }
+
+    return data.like_count || 0;
+  } catch (error) {
+    console.error('Error in getThreadLikeCount:', error);
+    throw error;
+  }
+};
+
+// Update thread like count (legacy function for backward compatibility)
 export const updateLikeCount = async (threadId, increment) => {
+  console.warn('updateLikeCount is deprecated. Use toggleThreadLike instead.');
+  
   try {
     // Gunakan pendekatan yang lebih kompatibel
     const { data: currentThread } = await supabase
@@ -437,7 +580,39 @@ export async function getPopularSearchTerms(limit = 10) {
   ].slice(0, limit);
 }
 
+// Likes table schema:
+// CREATE TABLE forum_likes (
+//   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+//   thread_id BIGINT REFERENCES forum_threads(id) ON DELETE CASCADE,
+//   user_id UUID REFERENCES auth.users(id),
+//   created_at TIMESTAMPTZ DEFAULT NOW(),
+//   UNIQUE(thread_id, user_id) -- Prevent duplicate likes from same user
+// );
+
 // Comments table schema:
+
+// SQL Functions for Supabase RPC:
+/*
+-- Increment like count function
+CREATE OR REPLACE FUNCTION increment_like_count(thread_id BIGINT)
+RETURNS void AS $$
+BEGIN
+  UPDATE forum_threads
+  SET like_count = COALESCE(like_count, 0) + 1
+  WHERE id = thread_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Decrement like count function
+CREATE OR REPLACE FUNCTION decrement_like_count(thread_id BIGINT)
+RETURNS void AS $$
+BEGIN
+  UPDATE forum_threads
+  SET like_count = GREATEST(COALESCE(like_count, 0) - 1, 0)
+  WHERE id = thread_id;
+END;
+$$ LANGUAGE plpgsql;
+*/
 // CREATE TABLE forum_comments (
 //   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 //   thread_id BIGINT REFERENCES forum_threads(id) ON DELETE CASCADE,

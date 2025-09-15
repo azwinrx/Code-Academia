@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getThreadById, getThreadComments, addComment, incrementViewCount } from '../helper/supabaseForum';
+import { getThreadById, getThreadComments, addComment, incrementViewCount, toggleThreadLike, getUserLikedThreads } from '../helper/supabaseForum';
 import { useAuth } from '../helper/authUtils';
 import { useToast } from '../hooks/useToast.jsx';
 import Dashboard from '../components/Layout/Dashboard';
@@ -10,25 +10,29 @@ export default function ThreadDetailPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { success, error: toastError } = useToast();
-  
+
   const [thread, setThread] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commentContent, setCommentContent] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
   const [loadError, setLoadError] = useState(null);
+  const [likedThreads, setLikedThreads] = useState({});
+  const [likingThreads, setLikingThreads] = useState({});
 
   useEffect(() => {
     loadThreadData();
+    loadUserLikes();
   }, [id]);
 
   const loadThreadData = async () => {
     try {
       setLoading(true);
       setLoadError(null);
-      
+
       // Load thread data
       const threadData = await getThreadById(id);
+      
       if (!threadData) {
         setLoadError('Thread tidak ditemukan');
         toastError('Thread tidak ditemukan');
@@ -44,7 +48,7 @@ export default function ThreadDetailPage() {
       // Load comments
       const commentsData = await getThreadComments(id);
       setComments(commentsData);
-      
+
     } catch (err) {
       console.error('Error loading thread:', err);
       setLoadError('Gagal memuat thread. Silakan coba lagi.');
@@ -54,9 +58,69 @@ export default function ThreadDetailPage() {
     }
   };
 
-  const handleSubmitComment = async (e) => {
+  // Load user's liked threads status
+  const loadUserLikes = async () => {
+    if (!user) return;
+    
+    try {
+      const likedThreadIds = await getUserLikedThreads(user.id);
+      
+      const likedMap = {};
+      likedThreadIds.forEach(threadId => {
+        likedMap[threadId] = true;
+      });
+      
+      setLikedThreads(likedMap);
+    } catch (err) {
+      console.error('Error loading user likes:', err);
+    }
+  };
+
+  // Handle like/unlike action
+  const handleLike = async (e) => {
     e.preventDefault();
     
+    if (!user) {
+      toastError('Anda harus login untuk memberikan like');
+      return;
+    }
+
+    // Set loading state for this specific thread
+    setLikingThreads(prev => ({ ...prev, [thread.id]: true }));
+
+    try {
+      const result = await toggleThreadLike(thread.id, user.id);
+
+      // Update liked status
+      setLikedThreads(prev => ({
+        ...prev,
+        [thread.id]: result.action === 'added'
+      }));
+
+      // Update like count in the thread data
+      setThread(prev => ({
+        ...prev,
+        like_count: result.newCount
+      }));
+
+      if (result.action === 'added') {
+        success('Thread disukai!');
+      } else {
+        success('Like dihapus');
+      }
+
+    } catch (err) {
+      console.error('Error toggling like:', err);
+      toastError('Gagal memberikan like');
+    } finally {
+      // Clear loading state
+      setLikingThreads(prev => ({ ...prev, [thread.id]: false }));
+    }
+  };
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+
     if (!user) {
       toastError('Anda harus login untuk berkomentar');
       return;
@@ -133,7 +197,7 @@ export default function ThreadDetailPage() {
     return (
       <Dashboard>
         <div className="min-h-screen p-4 lg:p-6">
-          <div className="max-w-4xl mx-auto text-center py-12">
+          <div className="max-w-5xl mx-auto text-center py-12">
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
                 <span className="text-2xl text-red-600">⚠️</span>
@@ -143,7 +207,7 @@ export default function ThreadDetailPage() {
                 {loadError || 'Thread tidak ditemukan'}
               </p>
             </div>
-            
+
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/forum')}
@@ -151,7 +215,7 @@ export default function ThreadDetailPage() {
               >
                 Kembali ke Forum
               </button>
-              
+
               <button
                 onClick={loadThreadData}
                 className="w-full sm:w-auto px-6 py-2 border border-[#77B1E3] text-[#77B1E3] rounded-md hover:bg-[#77B1E3] hover:text-white transition-colors"
@@ -168,17 +232,17 @@ export default function ThreadDetailPage() {
   return (
     <Dashboard>
       <div className="min-h-screen p-4 lg:p-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {/* Back Button */}
           <button
             onClick={() => navigate('/forum')}
-            className="mb-6 flex items-center text-[#77B1E3] hover:text-[#5A9BD3] transition-colors"
+            className="mb-6 flex items-center text-sm font-bold text-black bg-[#77B1E3] hover:bg-[#5A9BD3] transition-colors"
           >
             ← Kembali ke Forum
           </button>
 
           {/* Thread Content */}
-          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 mb-6 border border-[#77B1E3]">
+          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 mb-6">
             {/* Thread Header */}
             <div className="flex items-start gap-4 mb-6">
               <div className="flex-shrink-0">
@@ -186,12 +250,12 @@ export default function ThreadDetailPage() {
                   {thread.author_avatar || '👤'}
                 </div>
               </div>
-              
+
               <div className="flex-1">
                 <h1 className="text-2xl lg:text-3xl font-bold text-[#333] mb-2">
                   {thread.title}
                 </h1>
-                
+
                 <div className="flex flex-wrap items-center gap-4 text-sm text-[#666]">
                   <span className="font-medium text-[#333]">{thread.author_name}</span>
                   <span>•</span>
@@ -204,6 +268,25 @@ export default function ThreadDetailPage() {
                   <span className="flex items-center gap-1">
                     👁️ {thread.view_count || 0} dilihat
                   </span>
+                  <span>•</span>
+                  <button
+                    onClick={handleLike}
+                    disabled={likingThreads[thread.id]}
+                    className={`flex items-center gap-1 transition-all duration-200 ${
+                      likedThreads[thread.id]
+                        ? 'text-red-500 hover:text-red-600'
+                        : 'text-[#333] hover:text-red-500'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    {likingThreads[thread.id] ? (
+                      <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                    ) : likedThreads[thread.id] ? (
+                      '❤️'
+                    ) : (
+                      '🤍'
+                    )}
+                    <span>{thread.like_count || 0}</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -243,7 +326,7 @@ export default function ThreadDetailPage() {
           </div>
 
           {/* Comments Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 border border-[#77B1E3]">
+          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8">
             <h2 className="text-xl font-bold text-[#333] mb-6">
               Komentar ({comments.length})
             </h2>
@@ -257,7 +340,7 @@ export default function ThreadDetailPage() {
                       {user.user_metadata?.avatar || user.email?.charAt(0).toUpperCase() || '👤'}
                     </div>
                   </div>
-                  
+
                   <div className="flex-1">
                     <textarea
                       value={commentContent}
@@ -267,7 +350,7 @@ export default function ThreadDetailPage() {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#77B1E3] resize-none"
                       disabled={submittingComment}
                     />
-                    
+
                     <div className="flex justify-end mt-3">
                       <button
                         type="submit"
@@ -305,7 +388,7 @@ export default function ThreadDetailPage() {
                         {comment.author_avatar || '👤'}
                       </div>
                     </div>
-                    
+
                     <div className="flex-1">
                       <div className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-2">
@@ -316,7 +399,7 @@ export default function ThreadDetailPage() {
                             {formatTimestamp(comment.created_at)}
                           </span>
                         </div>
-                        
+
                         <p className="text-[#333] leading-relaxed whitespace-pre-wrap">
                           {comment.content}
                         </p>
