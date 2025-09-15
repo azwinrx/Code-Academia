@@ -79,7 +79,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/quiz/:subMateriId",
+    path: "/quiz/:slug",
     element: (
       <ProtectedRoute>
         <QuizPage />

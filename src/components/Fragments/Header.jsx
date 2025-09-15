@@ -12,6 +12,23 @@ export default function Header() {
   const inputRef = useRef(null);
   const { user, logout } = useAuth();
 
+  // Format tanggal bergabung
+  const formatJoinDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  // Handle logout
+  const handleLogout = async () => {
+    await logout();
+    setShowProfile(false);
+  };
+
   // Fetch suggestions saat mengetik
   const handleSearchChange = async (e) => {
     const value = e.target.value;
@@ -137,14 +154,14 @@ export default function Header() {
             />
           </div>
           {showProfile && !search && (
-            <div className="absolute right-0 mt-2 w-64 bg-white text-black rounded shadow-lg z-20 p-4">
-              <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl"
+            <div className="absolute right-0 mt-2 w-80 bg-white text-black rounded shadow-lg z-20 p-4">
+              <div
+                className="absolute -top-0.5 left-2 rounded-full text-gray-500 hover:text-gray-800 text-2xl cursor-pointer"
                 onClick={() => setShowProfile(false)}
                 aria-label="Close"
               >
                 &times;
-              </button>
+              </div>
               <div className="flex items-center gap-3 mb-4 border-b pb-2 mt-2">
                 <img
                   src="/Icon Kobi (maskot LogicBase)/kobiSenang.svg"
@@ -161,14 +178,13 @@ export default function Header() {
                     {user?.email || "user@email.com"}
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
-                    Bergabung sejak:{" "}
-                    {/* Tampilkan tanggal bergabung jika ada */}
+                    Bergabung sejak: {formatJoinDate(user?.created_at)}
                   </div>
                 </div>
               </div>
               <button
                 className="w-full px-4 py-2 bg-[#132238] text-white rounded hover:bg-slate-500"
-                onClick={logout}
+                onClick={handleLogout}
               >
                 Logout
               </button>

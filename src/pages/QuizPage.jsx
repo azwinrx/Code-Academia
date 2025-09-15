@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  getCompleteQuiz,
+  getCompleteQuizBySlug,
   submitQuizAnswersAndMarkComplete,
 } from "../helper/supabaseQuiz";
+import { getSubMateriBySlug } from "../helper/supabaseMateri";
 import { showToast } from "../helper/toastUtil";
 import { AuthContext } from "../helper/authUtils";
 
 const QuizPage = () => {
-  const { subMateriId } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
@@ -19,11 +20,34 @@ const QuizPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState(null);
+  const [subMateriId, setSubMateriId] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+  const [timerActive, setTimerActive] = useState(false);
+  const [shouldAutoSubmit, setShouldAutoSubmit] = useState(false);
+
+  // Format time helper function
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
 
   const loadQuiz = useCallback(async () => {
     try {
       setLoading(true);
-      const quizData = await getCompleteQuiz(parseInt(subMateriId));
+
+      // Get sub materi by slug first
+      const subMateri = await getSubMateriBySlug(slug);
+      if (!subMateri) {
+        showToast("Materi tidak ditemukan", "error");
+        navigate(-1);
+        return;
+      }
+
+      setSubMateriId(subMateri.id);
+
+      // Get quiz data using slug
+      const quizData = await getCompleteQuizBySlug(slug);
 
       if (!quizData) {
         showToast("Quiz tidak ditemukan untuk materi ini", "error");
@@ -39,11 +63,99 @@ const QuizPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [subMateriId, navigate]);
+  }, [slug, navigate]);
+
+  const handleSubmit = useCallback(
+    async (isAutoSubmit = false) => {
+      // Check if all questions are answered (only for manual submit)
+      if (!isAutoSubmit) {
+        const unansweredQuestions = quiz.questions.filter(
+          (q) => !answers[q.id]
+        );
+
+        if (unansweredQuestions.length > 0) {
+          showToast(
+            `Masih ada ${unansweredQuestions.length} pertanyaan yang belum dijawab`,
+            "warning"
+          );
+          return;
+        }
+      }
+
+      try {
+        setSubmitting(true);
+        setTimerActive(false); // Stop timer when submitting
+
+        const quizResult = await submitQuizAnswersAndMarkComplete(
+          quiz.id,
+          answers,
+          user?.id,
+          parseInt(subMateriId)
+        );
+        setResult(quizResult);
+        setShowResult(true);
+
+        const message = isAutoSubmit
+          ? `Waktu habis! Skor Anda ${quizResult.score}% dari ${
+              Object.keys(answers).length
+            } pertanyaan yang dijawab`
+          : quizResult.passed
+          ? `Selamat! Anda lulus dengan skor ${quizResult.score}% dan materi telah ditandai selesai!`
+          : `Skor Anda ${quizResult.score}%. Silakan coba lagi untuk mencapai skor minimal 80%`;
+
+        showToast(message, quizResult.passed ? "success" : "info");
+      } catch (error) {
+        console.error("Error submitting quiz:", error);
+        showToast("Gagal mengirim jawaban quiz", "error");
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    [quiz, answers, user, subMateriId]
+  );
 
   useEffect(() => {
     loadQuiz();
   }, [loadQuiz]);
+
+  // Timer effect
+  useEffect(() => {
+    let interval = null;
+    if (timerActive && timeLeft > 0 && !showResult) {
+      interval = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            setTimerActive(false);
+            setShouldAutoSubmit(true);
+            return 0;
+          }
+          // Show warning when 1 minute left
+          if (prevTime === 60) {
+            showToast("Waktu tersisa 1 menit!", "warning");
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    } else if (timeLeft === 0 || !timerActive) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timeLeft, showResult]);
+
+  // Auto submit effect
+  useEffect(() => {
+    if (shouldAutoSubmit) {
+      setShouldAutoSubmit(false);
+      handleSubmit(true);
+    }
+  }, [shouldAutoSubmit, handleSubmit]);
+
+  // Start timer when quiz is loaded
+  useEffect(() => {
+    if (quiz && !timerActive && !showResult) {
+      setTimerActive(true);
+    }
+  }, [quiz, timerActive, showResult]);
 
   const handleAnswerSelect = (questionId, optionId) => {
     setAnswers((prev) => ({
@@ -64,47 +176,13 @@ const QuizPage = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    // Check if all questions are answered
-    const unansweredQuestions = quiz.questions.filter((q) => !answers[q.id]);
-
-    if (unansweredQuestions.length > 0) {
-      showToast(
-        `Masih ada ${unansweredQuestions.length} pertanyaan yang belum dijawab`,
-        "warning"
-      );
-      return;
-    }
-
-    try {
-      setSubmitting(true);
-      const quizResult = await submitQuizAnswersAndMarkComplete(
-        quiz.id,
-        answers,
-        user?.id,
-        parseInt(subMateriId)
-      );
-      setResult(quizResult);
-      setShowResult(true);
-
-      const message = quizResult.passed
-        ? `Selamat! Anda lulus dengan skor ${quizResult.score}% dan materi telah ditandai selesai!`
-        : `Skor Anda ${quizResult.score}%. Silakan coba lagi untuk mencapai skor minimal 80%`;
-
-      showToast(message, quizResult.passed ? "success" : "info");
-    } catch (error) {
-      console.error("Error submitting quiz:", error);
-      showToast("Gagal mengirim jawaban quiz", "error");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const handleRetry = () => {
     setAnswers({});
     setCurrentQuestionIndex(0);
     setShowResult(false);
     setResult(null);
+    setTimeLeft(300); // Reset timer to 5 minutes
+    setTimerActive(true); // Restart timer
   };
 
   const handleFinish = () => {
@@ -230,9 +308,34 @@ const QuizPage = () => {
         <div className="bg-slate-800 border border-slate-700 rounded-lg shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-bold text-sky-300">Quiz</h1>
-            <span className="text-sm text-slate-400">
-              Pertanyaan {currentQuestionIndex + 1} dari {quiz.questions.length}
-            </span>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-slate-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 001.414-1.414L11 9.586V5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span
+                  className={`font-mono text-lg font-bold ${
+                    timeLeft <= 60
+                      ? "text-red-400 animate-pulse"
+                      : "text-sky-400"
+                  }`}
+                >
+                  {formatTime(timeLeft)}
+                </span>
+              </div>
+              <span className="text-sm text-slate-400">
+                Pertanyaan {currentQuestionIndex + 1} dari{" "}
+                {quiz.questions.length}
+              </span>
+            </div>
           </div>
 
           {/* Progress Bar */}

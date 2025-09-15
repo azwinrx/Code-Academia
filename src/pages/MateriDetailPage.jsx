@@ -6,6 +6,7 @@ import {
   addProgress,
 } from "../helper/supabaseMateri";
 import { hasQuiz } from "../helper/supabaseQuiz";
+import { generateSlug } from "../helper/utils";
 import { AuthContext } from "../helper/authUtils";
 
 export default function MateriDetailPage() {
@@ -85,7 +86,8 @@ export default function MateriDetailPage() {
 
   const handleStartQuiz = () => {
     if (activeSubMateri) {
-      navigate(`/quiz/${activeSubMateri.id}`);
+      const quizSlug = generateSlug(activeSubMateri.judul);
+      navigate(`/quiz/${quizSlug}`);
     }
   };
 

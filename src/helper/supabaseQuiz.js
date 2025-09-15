@@ -222,3 +222,24 @@ export async function hasQuiz(subMateriId) {
 
   return !error && data;
 }
+
+// Get complete quiz by sub-materi slug
+export async function getCompleteQuizBySlug(slug) {
+  try {
+    // Import getSubMateriBySlug to get the sub materi by slug
+    const { getSubMateriBySlug } = await import("./supabaseMateri.js");
+
+    // Find sub materi by slug
+    const subMateri = await getSubMateriBySlug(slug);
+    if (!subMateri) {
+      return null;
+    }
+
+    // Get quiz using the sub materi ID
+    const quizData = await getCompleteQuiz(subMateri.id);
+    return quizData;
+  } catch (error) {
+    console.error("Gagal mengambil quiz dengan slug:", error);
+    return null;
+  }
+}

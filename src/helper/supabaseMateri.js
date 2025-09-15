@@ -156,3 +156,28 @@ export async function getCoursesWithProgress(userId) {
 
   return coursesWithProgress;
 }
+
+/**
+ * Gets a sub-materi by slug generated from its title.
+ * @param {string} slug - The slug generated from sub-materi title.
+ */
+export async function getSubMateriBySlug(slug) {
+  const { data: subMateriList, error } = await supabase
+    .from("sub_materi")
+    .select("id, judul, markdown_content, tipe, urutan, materi_id");
+
+  if (error) {
+    console.error("Gagal mengambil sub materi:", error);
+    return null;
+  }
+
+  // Import generateSlug here to avoid circular dependencies
+  const { generateSlug } = await import("./utils.js");
+
+  // Find sub-materi with matching slug
+  const matchingSubMateri = subMateriList.find(
+    (sub) => generateSlug(sub.judul) === slug
+  );
+
+  return matchingSubMateri || null;
+}
