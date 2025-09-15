@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import {
   getMateriDetailWithProgress,
@@ -11,6 +11,7 @@ import { AuthContext } from "../helper/authUtils";
 export default function MateriDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useContext(AuthContext);
 
   const [materi, setMateri] = useState(null);
@@ -68,6 +69,19 @@ export default function MateriDetailPage() {
 
     fetchData();
   }, [slug, user, navigate]);
+
+  // Refresh data when coming back from quiz with success
+  useEffect(() => {
+    if (location.state?.refreshProgress && user) {
+      async function refreshData() {
+        const data = await getMateriDetailWithProgress(slug, user.id);
+        setCompletedIds(data.completedIds);
+      }
+      refreshData();
+      // Clear the state to prevent multiple refreshes
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, location.pathname, slug, user, navigate]);
 
   const handleStartQuiz = () => {
     if (activeSubMateri) {
@@ -242,6 +256,139 @@ export default function MateriDetailPage() {
                   {activeSubMateri.markdown_content}
                 </ReactMarkdown>
               </div>
+
+              {/* Quiz Information Section */}
+              {subMateriWithQuiz.has(activeSubMateri.id) && (
+                <div className="mt-8 mb-6 bg-blue-900/30 border border-blue-700/50 rounded-lg p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-blue-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-blue-300 mb-3">
+                        📝 Quiz Tersedia untuk Materi Ini
+                      </h3>
+                      <div className="space-y-3 text-slate-300">
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4 text-green-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>
+                            <strong className="text-yellow-300">
+                              Minimum skor untuk lulus:
+                            </strong>{" "}
+                            80%
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4 text-green-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>
+                            Materi akan{" "}
+                            <strong className="text-green-300">
+                              otomatis termarkir selesai
+                            </strong>{" "}
+                            jika lulus quiz
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4 text-green-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>
+                            Anda dapat{" "}
+                            <strong className="text-blue-300">
+                              mengulang quiz
+                            </strong>{" "}
+                            jika skor belum mencapai 80%
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4 text-green-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>
+                            Quiz berupa{" "}
+                            <strong className="text-purple-300">
+                              pilihan ganda
+                            </strong>{" "}
+                            dengan feedback hasil
+                          </span>
+                        </div>
+                      </div>
+                      <div className="mt-4 p-3 bg-amber-900/30 border border-amber-700/50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4 text-amber-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span className="text-sm font-medium text-amber-200">
+                            💡 <strong>Tips:</strong> Pastikan Anda sudah
+                            memahami materi dengan baik sebelum mengerjakan
+                            quiz!
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
                 {!completedIds.has(activeSubMateri.id) &&
                   !subMateriWithQuiz.has(activeSubMateri.id) && (

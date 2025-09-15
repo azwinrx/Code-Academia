@@ -1,4 +1,5 @@
 import supabase from "./supabaseClient";
+import { addProgress } from "./supabaseMateri";
 
 // Get quiz by sub_materi_id
 export async function getQuizBySubMateriId(subMateriId) {
@@ -66,6 +67,67 @@ export async function getCompleteQuiz(subMateriId) {
   }
 }
 
+// Submit quiz answers, calculate score, and mark as complete if passed
+export async function submitQuizAnswersAndMarkComplete(
+  quizId,
+  answers,
+  userId,
+  subMateriId
+) {
+  try {
+    // Get correct answers
+    const { data: questions, error: questionsError } = await supabase
+      .from("quiz_questions")
+      .select(
+        `
+        id,
+        quiz_options (
+          id,
+          is_correct
+        )
+      `
+      )
+      .eq("quiz_id", quizId);
+
+    if (questionsError) {
+      throw questionsError;
+    }
+
+    // Calculate score
+    let correctAnswers = 0;
+    const totalQuestions = questions.length;
+
+    questions.forEach((question) => {
+      const userAnswer = answers[question.id];
+      const correctOption = question.quiz_options.find(
+        (option) => option.is_correct
+      );
+
+      if (correctOption && userAnswer === correctOption.id) {
+        correctAnswers++;
+      }
+    });
+
+    const score = Math.round((correctAnswers / totalQuestions) * 100);
+    const passed = score >= 80; // Minimum score 80% untuk lulus
+
+    // If passed, mark the sub materi as complete
+    if (passed && userId && subMateriId) {
+      await addProgress(userId, subMateriId);
+    }
+
+    return {
+      score,
+      correctAnswers,
+      totalQuestions,
+      passed,
+    };
+  } catch (error) {
+    console.error("Gagal submit jawaban quiz:", error);
+    throw error;
+  }
+}
+
 // Submit quiz answers and calculate score
 export async function submitQuizAnswers(quizId, answers) {
   try {
@@ -125,7 +187,7 @@ export async function submitQuizAnswers(quizId, answers) {
       score,
       correctAnswers,
       totalQuestions,
-      passed: score >= 70, // Assuming 70% is passing grade
+      passed: score >= 80, // Minimum score 80% untuk lulus
     };
   } catch (error) {
     console.error("Gagal submit jawaban quiz:", error);

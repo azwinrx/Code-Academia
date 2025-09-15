@@ -1,11 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getCompleteQuiz, submitQuizAnswers } from "../helper/supabaseQuiz";
+import {
+  getCompleteQuiz,
+  submitQuizAnswersAndMarkComplete,
+} from "../helper/supabaseQuiz";
 import { showToast } from "../helper/toastUtil";
+import { AuthContext } from "../helper/authUtils";
 
 const QuizPage = () => {
   const { subMateriId } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const [quiz, setQuiz] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -73,13 +78,18 @@ const QuizPage = () => {
 
     try {
       setSubmitting(true);
-      const quizResult = await submitQuizAnswers(quiz.id, answers);
+      const quizResult = await submitQuizAnswersAndMarkComplete(
+        quiz.id,
+        answers,
+        user?.id,
+        parseInt(subMateriId)
+      );
       setResult(quizResult);
       setShowResult(true);
 
       const message = quizResult.passed
-        ? `Selamat! Anda lulus dengan skor ${quizResult.score}%`
-        : `Skor Anda ${quizResult.score}%. Silakan coba lagi untuk mencapai skor minimal 70%`;
+        ? `Selamat! Anda lulus dengan skor ${quizResult.score}% dan materi telah ditandai selesai!`
+        : `Skor Anda ${quizResult.score}%. Silakan coba lagi untuk mencapai skor minimal 80%`;
 
       showToast(message, quizResult.passed ? "success" : "info");
     } catch (error) {
@@ -98,15 +108,20 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
-    navigate(-1);
+    // Redirect back with refresh parameter if passed
+    if (result?.passed) {
+      navigate(-1, { state: { refreshProgress: true } });
+    } else {
+      navigate(-1);
+    }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Memuat quiz...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-400 mx-auto mb-4"></div>
+          <p className="text-slate-300">Memuat quiz...</p>
         </div>
       </div>
     );
@@ -114,9 +129,9 @@ const QuizPage = () => {
 
   if (!quiz) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Quiz tidak ditemukan</p>
+          <p className="text-slate-300">Quiz tidak ditemukan</p>
         </div>
       </div>
     );
@@ -124,16 +139,18 @@ const QuizPage = () => {
 
   if (showResult) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-8 text-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg shadow-xl max-w-md w-full p-8 text-center">
           <div
             className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center ${
-              result.passed ? "bg-green-100" : "bg-yellow-100"
+              result.passed
+                ? "bg-green-900/50 border-2 border-green-500"
+                : "bg-yellow-900/50 border-2 border-yellow-500"
             }`}
           >
             {result.passed ? (
               <svg
-                className="w-10 h-10 text-green-600"
+                className="w-10 h-10 text-green-400"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -145,7 +162,7 @@ const QuizPage = () => {
               </svg>
             ) : (
               <svg
-                className="w-10 h-10 text-yellow-600"
+                className="w-10 h-10 text-yellow-400"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -158,20 +175,23 @@ const QuizPage = () => {
             )}
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-white mb-2">
             {result.passed ? "Selamat!" : "Belum Berhasil"}
           </h2>
 
           <div className="mb-6">
             <div
               className={`text-4xl font-bold mb-2 ${
-                result.passed ? "text-green-600" : "text-yellow-600"
+                result.passed ? "text-green-400" : "text-yellow-400"
               }`}
             >
               {result.score}%
             </div>
-            <p className="text-gray-600">
+            <p className="text-slate-300">
               {result.correctAnswers} dari {result.totalQuestions} jawaban benar
+            </p>
+            <p className="text-sm text-slate-400 mt-1">
+              Minimum score untuk lulus: 80%
             </p>
           </div>
 
@@ -179,7 +199,7 @@ const QuizPage = () => {
             {!result.passed && (
               <button
                 onClick={handleRetry}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors"
               >
                 Coba Lagi
               </button>
@@ -189,7 +209,7 @@ const QuizPage = () => {
               className={`px-6 py-3 rounded-lg transition-colors ${
                 result.passed
                   ? "bg-green-600 text-white hover:bg-green-700"
-                  : "bg-gray-600 text-white hover:bg-gray-700"
+                  : "bg-slate-600 text-white hover:bg-slate-700"
               }`}
             >
               {result.passed ? "Lanjutkan" : "Selesai"}
@@ -204,29 +224,29 @@ const QuizPage = () => {
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-6">
+    <div className="min-h-screen bg-slate-900 py-6">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-gray-900">Quiz</h1>
-            <span className="text-sm text-gray-500">
+            <h1 className="text-2xl font-bold text-sky-300">Quiz</h1>
+            <span className="text-sm text-slate-400">
               Pertanyaan {currentQuestionIndex + 1} dari {quiz.questions.length}
             </span>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-slate-700 rounded-full h-2">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              className="bg-sky-500 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
         </div>
 
         {/* Question */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-xl font-semibold text-white mb-6">
             {currentQuestion.teks_pertanyaan}
           </h2>
 
@@ -237,8 +257,8 @@ const QuizPage = () => {
                 key={option.id}
                 className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
                   answers[currentQuestion.id] === option.id
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                    ? "border-sky-500 bg-sky-900/30"
+                    : "border-slate-600 hover:border-slate-500 hover:bg-slate-700/50"
                 }`}
               >
                 <input
@@ -254,30 +274,30 @@ const QuizPage = () => {
                 <div
                   className={`w-4 h-4 rounded-full border-2 mr-3 ${
                     answers[currentQuestion.id] === option.id
-                      ? "border-blue-500 bg-blue-500"
-                      : "border-gray-300"
+                      ? "border-sky-400 bg-sky-400"
+                      : "border-slate-400"
                   }`}
                 >
                   {answers[currentQuestion.id] === option.id && (
                     <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
                   )}
                 </div>
-                <span className="text-gray-900">{option.teks_pilihan}</span>
+                <span className="text-slate-200">{option.teks_pilihan}</span>
               </label>
             ))}
           </div>
         </div>
 
         {/* Navigation */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center">
             <button
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
               className={`px-6 py-2 rounded-lg transition-colors ${
                 currentQuestionIndex === 0
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-600 text-white hover:bg-gray-700"
+                  ? "bg-slate-600 text-slate-400 cursor-not-allowed"
+                  : "bg-slate-600 text-white hover:bg-slate-500"
               }`}
             >
               Sebelumnya
@@ -289,10 +309,10 @@ const QuizPage = () => {
                   key={index}
                   className={`w-3 h-3 rounded-full ${
                     index === currentQuestionIndex
-                      ? "bg-blue-600"
+                      ? "bg-sky-500"
                       : answers[quiz.questions[index].id]
                       ? "bg-green-500"
-                      : "bg-gray-300"
+                      : "bg-slate-500"
                   }`}
                 />
               ))}
@@ -304,7 +324,7 @@ const QuizPage = () => {
                 disabled={submitting}
                 className={`px-6 py-2 rounded-lg transition-colors ${
                   submitting
-                    ? "bg-gray-400 text-white cursor-not-allowed"
+                    ? "bg-slate-600 text-slate-400 cursor-not-allowed"
                     : "bg-green-600 text-white hover:bg-green-700"
                 }`}
               >
@@ -313,7 +333,7 @@ const QuizPage = () => {
             ) : (
               <button
                 onClick={handleNext}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors"
               >
                 Selanjutnya
               </button>
