@@ -16,31 +16,44 @@ export default function Forum() {
     image: null
   });
   const [submitting, setSubmitting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [discussionThreads, setDiscussionThreads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 10;
 
 
   useEffect(() => {
-    loadForumThreads();
-  }, [sortBy]);
+    const debounceTimer = setTimeout(() => {
+      loadForumThreads(currentPage);
+    }, 1000); // 1000ms debounce
 
-  const loadForumThreads = async () => {
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [sortBy, currentPage, searchTerm]);
+
+  const loadForumThreads = async (page) => {
     try {
       setLoading(true);
       setError(null);
 
-      const { threads } = await getForumThreads({
-        page: 1,
-        pageSize: 20,
-        sortBy: sortBy
+      const { threads, totalCount } = await getForumThreads({
+        page: page,
+        pageSize: pageSize,
+        sortBy: sortBy,
+        searchTerm: searchTerm
       });
 
       if (threads) {
         setDiscussionThreads(threads);
+        setTotalPages(Math.ceil(totalCount / pageSize));
       } else {
         setDiscussionThreads([]);
+        setTotalPages(0);
       }
 
     } catch (err) {
@@ -48,6 +61,12 @@ export default function Forum() {
       setError('Gagal memuat thread forum. Silakan coba lagi.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
@@ -74,18 +93,16 @@ export default function Forum() {
     }
   };
 
-  const sortedThreads = [...discussionThreads].sort((a, b) => {
-    switch (sortBy) {
-      case 'newest':
-        return new Date(b.created_at) - new Date(a.created_at);
-      case 'popular':
-        return (b.reply_count || 0) - (a.reply_count || 0);
-      case 'trending':
-        return (b.view_count || 0) - (a.view_count || 0);
-      default:
-        return 0;
-    }
-  });
+  
+
+  const getThreadColor = (threadId) => {
+    const colorMap = {
+      1: 'bg-[#F1AD8D]',
+      2: 'bg-[#A9A6E5]',
+      0: 'bg-[#A2D1B0]',
+    };
+    return colorMap[threadId % 3];
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -108,18 +125,7 @@ export default function Forum() {
     setFormData({ ...formData, image: file });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen p-4 lg:p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#77B1E3]"></div>
-            <p className="mt-4 text-[#666]">Memuat thread forum...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
 
   if (error) {
     return (
@@ -149,28 +155,60 @@ export default function Forum() {
       <div className="max-w-7xl mx-auto">
         {/* Unified Header Card with Create Button */}
         <div className="bg-[#A9A6E5] rounded-xl shadow-lg p-4 lg:p-6 mb-4 lg:mb-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div className="flex-1">
-              <h1 className="text-xl lg:text-2xl font-bold text-[#333] mb-2 lg:mb-0">Forum Diskusi</h1>
-              <div className="flex items-center gap-2">
-                <span className="text-xs lg:text-sm text-[#333]">Urutkan berdasarkan:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-2 lg:px-3 py-1 lg:py-2 border border-[#77B1E3] rounded-md text-xs lg:text-sm focus:outline-none focus:ring-2 focus:ring-[#77B1E3] bg-white text-[#333]"
-                >
-                  <option value="newest">Terbaru</option>
-                  <option value="popular">Paling Populer</option>
-                  <option value="trending">Trending</option>
-                </select>
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div className="flex-1 flex items-center gap-4">
+              <div>
+                <h1 className="text-xl lg:text-2xl font-bold text-[#333] mb-2 lg:mb-0">Forum Diskusi</h1>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs lg:text-sm text-[#333]">Urutkan berdasarkan:</span>
+                  <div className="relative">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="px-4 py-1.5 pr-8 rounded-lg font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-purple-700 bg-purple-700 text-[#fff] appearance-none cursor-pointer hover:border-[#77B1E3] transition-all duration-200"
+                    >
+                      <option value="newest">Terbaru</option>
+                      <option value="popular">Paling Populer</option>
+                      <option value="trending">Trending</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                      <svg className="w-4 h-4 text-[#fff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <button
-              className="w-full lg:w-auto bg-[#77B1E3] text-[#333] py-2 lg:py-3 px-4 rounded-lg font-semibold hover:bg-[#5A9BD3] transition-all duration-200 shadow-md hover:shadow-lg text-sm lg:text-base"
-              onClick={() => setShowCreateModal(true)}
-            >
-              📝 Buat Thread Baru
-            </button>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Cari thread..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="px-3 py-2 border border-[#77B1E3] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#77B1E3] bg-white text-[#333] pr-10"
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  {loading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-700"></div>
+                  ) : (
+                    <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+              </div>
+              <button
+                className="w-full lg:w-auto bg-purple-700 text-[#fff] py-2 lg:py-3 px-4 rounded-lg font-semibold hover:bg-purple-800 transition-all duration-200 shadow-md hover:shadow-lg text-sm lg:text-base border-none"
+                onClick={() => setShowCreateModal(true)}
+              >
+                📝 Buat Thread Baru
+              </button>
+            </div>
           </div>
         </div>
 
@@ -179,19 +217,19 @@ export default function Forum() {
 
           {/* Discussion Threads */}
           <div className="space-y-3 lg:space-y-4">
-            {sortedThreads.length === 0 ? (
+            {discussionThreads.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-xl shadow-lg">
                 <p className="text-[#666]">Belum ada thread diskusi. Jadilah yang pertama membuat thread!</p>
               </div>
             ) : (
-              sortedThreads.map((thread) => (
+              discussionThreads.map((thread) => (
                 <article
                   key={thread.id}
                   className={`rounded-xl shadow-lg p-4 lg:p-6 cursor-pointer transition-all duration-300
                     transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 ${thread.id % 3 === 1 ? 'bg-[#F1AD8D] hover:bg-[#F19D7D]' :
                       thread.id % 3 === 2 ? 'bg-[#A9A6E5] hover:bg-[#9996D5]' : 'bg-[#A2D1B0] hover:bg-[#92C1A0]'
                     }`}
-                  onClick={() => navigate(`/threads/${thread.id}`)}
+                  onClick={() => navigate(`/threads/${thread.id}`, { state: { color: getThreadColor(thread.id) } })}
                 >
                   <div className="flex items-start gap-3 lg:gap-4">
                     {/* Author Avatar */}
@@ -239,28 +277,20 @@ export default function Forum() {
           </div>
 
           {/* Pagination */}
-          {sortedThreads.length > 0 && (
+          {totalPages > 1 && (
             <div className="bg-[#A9A6E5] rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="flex justify-center items-center gap-1 lg:gap-2">
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white disabled:opacity-50 text-[#fff]">
-                  Sebelumnya
-                </button>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 bg-[#77B1E3] text-white rounded-md text-xs lg:text-sm hover:bg-[#5A9BD3]">
-                  1
-                </button>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
-                  2
-                </button>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
-                  3
-                </button>
-                <span className="px-1 lg:px-2 py-1 lg:py-2 text-[#fff] text-xs lg:text-sm">...</span>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
-                  10
-                </button>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
-                  Berikutnya
-                </button>
+              <div className="relative">
+                <div className="flex justify-center items-center gap-1 lg:gap-2">
+                  {[...Array(totalPages).keys()].map(number => (
+                    <button
+                      key={number + 1}
+                      onClick={() => handlePageChange(number + 1)}
+                      className={`px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm border-none hover:text-white text-[#fff] ${currentPage === number + 1 ? 'bg-purple-700 text-white' : 'bg-purple-800'}`}>
+                      {number + 1}
+                    </button>
+                  ))}
+                </div>
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs lg:text-sm text-[#333]">Page {currentPage} of {totalPages}</span>
               </div>
             </div>
           )}
