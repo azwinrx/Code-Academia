@@ -276,7 +276,7 @@ export default function ThreadDetailPage() {
                       likedThreads[thread.id]
                         ? 'text-red-500 hover:text-red-600'
                         : 'text-[#333] hover:text-red-500'
-                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    } disabled:opacity-50 disabled:cursor-not-allowed bg-[#76b0e3] border-none`}
                   >
                     {likingThreads[thread.id] ? (
                       <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
