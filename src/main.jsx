@@ -39,6 +39,7 @@ const router = createBrowserRouter([
   { path: "/riwayat", element: <ProtectedRoute><RiwayatPage /></ProtectedRoute> },
   { path: "/forum", element: <ProtectedRoute><BantuanPage /></ProtectedRoute> },
   { path: "/threads/:id", element: <ProtectedRoute><ThreadDetailPage /></ProtectedRoute> },
+
 ]);
 
 // Render Aplikasi (tidak perlu diubah)

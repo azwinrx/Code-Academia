@@ -30,7 +30,7 @@ export default function Forum() {
     try {
       setLoading(true);
       setError(null);
-
+      
       const { threads } = await getForumThreads({
         page: 1,
         pageSize: 20,
@@ -42,7 +42,7 @@ export default function Forum() {
       } else {
         setDiscussionThreads([]);
       }
-
+      
     } catch (err) {
       console.error('Error loading forum threads:', err);
       setError('Gagal memuat thread forum. Silakan coba lagi.');
@@ -105,7 +105,7 @@ export default function Forum() {
       return;
     }
 
-    setFormData({ ...formData, image: file });
+    setFormData({...formData, image: file});
   };
 
   if (loading) {
@@ -148,7 +148,7 @@ export default function Forum() {
       {/* Main Layout */}
       <div className="max-w-7xl mx-auto">
         {/* Unified Header Card with Create Button */}
-        <div className="bg-[#A9A6E5] rounded-xl shadow-lg p-4 lg:p-6 mb-4 lg:mb-6">
+        <div className="bg-[#A9A6E5] rounded-xl shadow-lg p-4 lg:p-6 mb-4 lg:mb-6 border border-[#77B1E3]">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div className="flex-1">
               <h1 className="text-xl lg:text-2xl font-bold text-[#333] mb-2 lg:mb-0">Forum Diskusi</h1>
@@ -166,7 +166,7 @@ export default function Forum() {
               </div>
             </div>
             <button
-              className="w-full lg:w-auto bg-[#77B1E3] text-[#333] py-2 lg:py-3 px-4 rounded-lg font-semibold hover:bg-[#5A9BD3] transition-all duration-200 shadow-md hover:shadow-lg text-sm lg:text-base"
+              className="w-full lg:w-auto bg-[#77B1E3] text-white py-2 lg:py-3 px-4 rounded-lg font-semibold hover:bg-[#5A9BD3] transition-all duration-200 shadow-md hover:shadow-lg text-sm lg:text-base"
               onClick={() => setShowCreateModal(true)}
             >
               📝 Buat Thread Baru
@@ -180,16 +180,16 @@ export default function Forum() {
           {/* Discussion Threads */}
           <div className="space-y-3 lg:space-y-4">
             {sortedThreads.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-xl shadow-lg">
+              <div className="text-center py-12 bg-white rounded-xl shadow-lg border border-[#77B1E3]">
                 <p className="text-[#666]">Belum ada thread diskusi. Jadilah yang pertama membuat thread!</p>
               </div>
             ) : (
               sortedThreads.map((thread) => (
                 <article
                   key={thread.id}
-                  className={`rounded-xl shadow-lg p-4 lg:p-6 cursor-pointer transition-all duration-300
+                  className={`rounded-xl shadow-lg p-4 lg:p-6 border border-[#77B1E3] cursor-pointer transition-all duration-300
                     transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 ${thread.id % 3 === 1 ? 'bg-[#F1AD8D] hover:bg-[#F19D7D]' :
-                      thread.id % 3 === 2 ? 'bg-[#A9A6E5] hover:bg-[#9996D5]' : 'bg-[#A2D1B0] hover:bg-[#92C1A0]'
+                    thread.id % 3 === 2 ? 'bg-[#A9A6E5] hover:bg-[#9996D5]' : 'bg-[#A2D1B0] hover:bg-[#92C1A0]'
                     }`}
                   onClick={() => navigate(`/threads/${thread.id}`)}
                 >
@@ -204,7 +204,7 @@ export default function Forum() {
                     {/* Thread Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-base lg:text-lg font-semibold text-[#333] line-clamp-1">
+                        <h3 className="text-base lg:text-lg font-semibold text-[#333] hover:text-[#77B1E3] line-clamp-1">
                           {thread.title}
                         </h3>
                       </div>
@@ -215,7 +215,7 @@ export default function Forum() {
 
                       {/* Meta Information */}
                       <div className="flex flex-wrap items-center gap-2 lg:gap-4 text-xs lg:text-sm text-[#333]">
-                        <span className="font-medium text-[#333]">{thread.author_name}</span>
+                        <span className="font-medium text-[#77B1E3]">{thread.author_name}</span>
                         <span className="hidden sm:inline">•</span>
                         <span>{formatTimestamp(thread.created_at)}</span>
                         <span className="hidden sm:inline">•</span>
@@ -240,25 +240,25 @@ export default function Forum() {
 
           {/* Pagination */}
           {sortedThreads.length > 0 && (
-            <div className="bg-[#A9A6E5] rounded-xl shadow-lg p-4 lg:p-6">
+            <div className="bg-[#A9A6E5] rounded-xl shadow-lg p-4 lg:p-6 border border-[#77B1E3]">
               <div className="flex justify-center items-center gap-1 lg:gap-2">
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white disabled:opacity-50 text-[#fff]">
+                <button className="px-3 lg:px-4 py-1 lg:py-2 border border-[#77B1E3] rounded-md text-xs lg:text-sm hover:bg-[#77B1E3] hover:text-white disabled:opacity-50 text-[#77B1E3]">
                   Sebelumnya
                 </button>
                 <button className="px-3 lg:px-4 py-1 lg:py-2 bg-[#77B1E3] text-white rounded-md text-xs lg:text-sm hover:bg-[#5A9BD3]">
                   1
                 </button>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
+                <button className="px-3 lg:px-4 py-1 lg:py-2 border border-[#77B1E3] rounded-md text-xs lg:text-sm hover:bg-[#77B1E3] hover:text-white text-[#77B1E3]">
                   2
                 </button>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
+                <button className="px-3 lg:px-4 py-1 lg:py-2 border border-[#77B1E3] rounded-md text-xs lg:text-sm hover:bg-[#77B1E3] hover:text-white text-[#77B1E3]">
                   3
                 </button>
-                <span className="px-1 lg:px-2 py-1 lg:py-2 text-[#fff] text-xs lg:text-sm">...</span>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
+                <span className="px-1 lg:px-2 py-1 lg:py-2 text-[#77B1E3] text-xs lg:text-sm">...</span>
+                <button className="px-3 lg:px-4 py-1 lg:py-2 border border-[#77B1E3] rounded-md text-xs lg:text-sm hover:bg-[#77B1E3] hover:text-white text-[#77B1E3]">
                   10
                 </button>
-                <button className="px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm bg-[#77B1E3] hover:text-white text-[#fff]">
+                <button className="px-3 lg:px-4 py-1 lg:py-2 border border-[#77B1E3] rounded-md text-xs lg:text-sm hover:bg-[#77B1E3] hover:text-white text-[#77B1E3]">
                   Berikutnya
                 </button>
               </div>
@@ -270,78 +270,44 @@ export default function Forum() {
       {/* Create Thread Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-[#77B1E3] to-[#5A9BD3] text-white p-6 rounded-t-xl">
+            <div className="bg-[#77B1E3] text-white p-6 rounded-t-xl">
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                    <span className="text-lg">📝</span>
-                  </div>
-                  <h2 className="text-2xl font-bold tracking-tight">Buat Thread Baru</h2>
-                </div>
+                <h2 className="text-xl font-bold">Buat Thread Baru</h2>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all duration-200 text-white hover:scale-110"
+                  className="text-white hover:text-gray-200 text-2xl"
                 >
-                  <span className="text-xl font-semibold">×</span>
+                  ×
                 </button>
               </div>
-              <p className="text-white/90 text-sm mt-2">
-                Bagikan pemikiran dan ide Anda dengan komunitas
-              </p>
             </div>
 
             {/* Modal Body */}
             <div className="p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Title Input */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <span className="flex items-center gap-2">
-                      <span className="w-5 h-5 bg-[#77B1E3] rounded-full flex items-center justify-center text-white text-xs">1</span>
-                      Judul Thread *
-                    </span>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Judul Thread
                   </label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#77B1E3] focus:border-transparent transition-all duration-200 placeholder:text-gray-400"
-                    placeholder="Masukkan judul thread yang menarik..."
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#77B1E3]"
+                    placeholder="Masukkan judul thread..."
                     required
                   />
-                  <p className="text-xs text-gray-500">Buat judul yang jelas dan deskriptif</p>
-                </div>
-
-                {/* Content Textarea */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <span className="flex items-center gap-2">
-                      <span className="w-5 h-5 bg-[#77B1E3] rounded-full flex items-center justify-center text-white text-xs">2</span>
-                      Konten *
-                    </span>
-                  </label>
-                  <textarea
-                    value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#77B1E3] focus:border-transparent transition-all duration-200 placeholder:text-gray-400 resize-vertical"
-                    placeholder="Tulis konten thread Anda di sini dengan jelas dan detail..."
-                    required
-                  />
-                  <p className="text-xs text-gray-500">Bagikan pemikiran dan ide Anda dengan jelas</p>
                 </div>
 
                 {/* Image Upload (Optional) */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <span className="flex items-center gap-2">
-                      <span className="w-5 h-5 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-xs">3</span>
-                      Upload Gambar (Opsional)
-                    </span>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Gambar (Opsional)
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center transition-all duration-200 hover:border-[#77B1E3] hover:bg-gray-50">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <input
                       type="file"
                       accept=".jpg,.jpeg,.png,.gif"
@@ -354,92 +320,75 @@ export default function Forum() {
                       className="cursor-pointer block"
                     >
                       {formData.image ? (
-                        <div className="space-y-4">
-                          <div className="relative mx-auto">
-                            <img
-                              src={URL.createObjectURL(formData.image)}
-                              alt="Preview"
-                              className="mx-auto h-40 object-contain rounded-lg shadow-md"
-                            />
-                            <div className="absolute -top-2 -right-2">
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  e.preventDefault();
-                                  setFormData({ ...formData, image: null });
-                                  const fileInput = document.getElementById('thread-image-upload');
-                                  if (fileInput) fileInput.value = '';
-                                }}
-                                className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
-                              >
-                                <span className="text-sm">×</span>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                            <p className="text-sm text-green-700 font-medium">
-                              ✅ {formData.image.name}
-                            </p>
-                            <p className="text-xs text-green-600 mt-1">
-                              File berhasil diupload
-                            </p>
-                          </div>
+                        <div className="space-y-2">
+                          <img
+                            src={URL.createObjectURL(formData.image)}
+                            alt="Preview"
+                            className="mx-auto h-32 object-contain rounded-lg"
+                          />
+                          <p className="text-sm text-green-600">
+                            {formData.image.name}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setFormData({...formData, image: null});
+                            }}
+                            className="text-sm text-red-600 hover:text-red-800"
+                          >
+                            Hapus Gambar
+                          </button>
                         </div>
                       ) : (
-                        <div className="space-y-4">
-                          <div className="mx-auto w-16 h-16 bg-[#77B1E3]/10 rounded-full flex items-center justify-center">
-                            <svg className="w-8 h-8 text-[#77B1E3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="space-y-2">
+                          <div className="mx-auto w-12 h-12 text-gray-400">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                           </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-700 mb-1">
-                              Seret dan lepas file di sini
-                            </p>
-                            <p className="text-sm text-gray-600 mb-2">
-                              atau klik untuk memilih file
-                            </p>
-                            <div className="bg-gray-100 rounded-lg p-2">
-                              <p className="text-xs text-gray-500">
-                                📷 Format: JPG, JPEG, PNG, GIF
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                📏 Maksimal: 5MB
-                              </p>
-                            </div>
-                          </div>
+                          <p className="text-sm text-gray-600">
+                            Klik untuk upload gambar
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Format: JPG, JPEG, PNG, GIF (Maks. 5MB)
+                          </p>
                         </div>
                       )}
                     </label>
                   </div>
                 </div>
 
+                {/* Content Textarea */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Konten
+                  </label>
+                  <textarea
+                    value={formData.content}
+                    onChange={(e) => setFormData({...formData, content: e.target.value})}
+                    rows={6}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#77B1E3] resize-none"
+                    placeholder="Tulis konten thread Anda di sini..."
+                    required
+                  />
+                </div>
+
                 {/* Modal Footer */}
-                <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
+                <div className="flex justify-end gap-3 pt-4">
                   <button
                     type="button"
                     onClick={() => setShowCreateModal(false)}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 font-medium hover:shadow-sm"
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="px-6 py-3 bg-gradient-to-r from-[#77B1E3] to-[#5A9BD3] text-white rounded-xl hover:from-[#6AA2D6] hover:to-[#4A8BC6] transition-all duration-200 font-medium shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transform"
+                    className="px-6 py-2 bg-[#77B1E3] text-white rounded-lg hover:bg-[#5A9BD3] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {submitting ? (
-                      <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                        Sedang Membuat...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2">
-                        <span>📝</span>
-                        Buat Thread
-                      </span>
-                    )}
+                    {submitting ? 'Membuat...' : 'Buat Thread'}
                   </button>
                 </div>
               </form>
@@ -452,14 +401,14 @@ export default function Forum() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+    
     if (!user) {
       toastError('Anda harus login untuk membuat thread');
       return;
     }
 
     setSubmitting(true);
-
+    
     try {
       const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'Anonymous';
       const userAvatar = user.user_metadata?.avatar || '👤';
@@ -476,7 +425,7 @@ export default function Forum() {
       setShowCreateModal(false);
       setFormData({ title: '', content: '', image: null });
       loadForumThreads(); // Reload threads
-
+      
     } catch (error) {
       console.error('Error creating thread:', error);
       toastError('Gagal membuat thread');
