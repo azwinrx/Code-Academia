@@ -5,6 +5,7 @@ import {
   getMateriDetailWithProgress,
   addProgress,
 } from "../helper/supabaseMateri";
+import { hasQuiz } from "../helper/supabaseQuiz";
 import { AuthContext } from "../helper/authUtils";
 
 export default function MateriDetailPage() {
@@ -18,6 +19,7 @@ export default function MateriDetailPage() {
   const [activeSubMateri, setActiveSubMateri] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [subMateriWithQuiz, setSubMateriWithQuiz] = useState(new Set());
 
   useEffect(() => {
     if (!user) {
@@ -37,6 +39,21 @@ export default function MateriDetailPage() {
           setMateri(materi);
           setSubMateriList(subMateriList);
           setCompletedIds(completedIds);
+
+          // Check which sub materi have quizzes
+          const quizChecks = await Promise.all(
+            subMateriList.map(async (sub) => {
+              const hasQuizResult = await hasQuiz(sub.id);
+              return { id: sub.id, hasQuiz: !!hasQuizResult };
+            })
+          );
+
+          const subMateriWithQuizSet = new Set();
+          quizChecks.forEach(({ id, hasQuiz: hasQuizResult }) => {
+            if (hasQuizResult) subMateriWithQuizSet.add(id);
+          });
+          setSubMateriWithQuiz(subMateriWithQuizSet);
+
           if (subMateriList.length > 0) {
             setActiveSubMateri(subMateriList[0]);
           }
@@ -51,6 +68,12 @@ export default function MateriDetailPage() {
 
     fetchData();
   }, [slug, user, navigate]);
+
+  const handleStartQuiz = () => {
+    if (activeSubMateri) {
+      navigate(`/quiz/${activeSubMateri.id}`);
+    }
+  };
 
   const handleMarkComplete = async () => {
     if (!user || !activeSubMateri) return;
@@ -219,28 +242,53 @@ export default function MateriDetailPage() {
                   {activeSubMateri.markdown_content}
                 </ReactMarkdown>
               </div>
-              {!completedIds.has(activeSubMateri.id) && (
-                <button
-                  onClick={handleMarkComplete}
-                  className="mt-8 bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-800 transition-colors w-full md:w-auto flex items-center justify-center gap-2 border-none"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                {!completedIds.has(activeSubMateri.id) &&
+                  !subMateriWithQuiz.has(activeSubMateri.id) && (
+                    <button
+                      onClick={handleMarkComplete}
+                      className="bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-800 transition-colors flex items-center justify-center gap-2 border-none"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Mark as Complete
+                    </button>
+                  )}
+                {subMateriWithQuiz.has(activeSubMateri.id) && (
+                  <button
+                    onClick={handleStartQuiz}
+                    className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition-colors flex items-center justify-center gap-2 border-none"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Mark as Complete
-                </button>
-              )}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Mulai Quiz
+                  </button>
+                )}
+              </div>
             </div>
           </section>
         ) : (
