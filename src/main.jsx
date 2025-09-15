@@ -22,24 +22,94 @@ import RiwayatPage from "./pages/RiwayatPage.jsx";
 import BantuanPage from "./pages/ForumPage.jsx";
 import ThreadDetailPage from "./pages/ThreadDetailPage.jsx";
 import MateriDetailPage from "./pages/MateriDetailPage.jsx";
+import QuizPage from "./pages/QuizPage.jsx";
 import ProtectedRoute from "./components/Fragments/ProtectedRoute.jsx";
 import RedirectIfAuthenticated from "./components/Fragments/RedirectIfAuthenticated.jsx";
 
-
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
-  { path: "/login", element: <RedirectIfAuthenticated><Login /></RedirectIfAuthenticated> },
-  { path: "/signup", element: <RedirectIfAuthenticated><Signup /></RedirectIfAuthenticated> },
+  {
+    path: "/login",
+    element: (
+      <RedirectIfAuthenticated>
+        <Login />
+      </RedirectIfAuthenticated>
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <RedirectIfAuthenticated>
+        <Signup />
+      </RedirectIfAuthenticated>
+    ),
+  },
   { path: "/reset-password", element: <ResetPassword /> },
   { path: "/reset-password-confirm", element: <ResetPasswordConfirm /> },
-  { path: "/success", element: <ProtectedRoute><Success /></ProtectedRoute> },
-  { path: "/beranda", element: <ProtectedRoute><DashboardPage /></ProtectedRoute> },
-  { path: "/materi", element: <ProtectedRoute><CoursePage /></ProtectedRoute> },
-  { path: "/materi/:slug", element: <ProtectedRoute><MateriDetailPage /></ProtectedRoute> },
-  { path: "/riwayat", element: <ProtectedRoute><RiwayatPage /></ProtectedRoute> },
-  { path: "/forum", element: <ProtectedRoute><BantuanPage /></ProtectedRoute> },
-  { path: "/threads/:id", element: <ProtectedRoute><ThreadDetailPage /></ProtectedRoute> },
-
+  {
+    path: "/success",
+    element: (
+      <ProtectedRoute>
+        <Success />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/beranda",
+    element: (
+      <ProtectedRoute>
+        <DashboardPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/materi",
+    element: (
+      <ProtectedRoute>
+        <CoursePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/materi/:slug",
+    element: (
+      <ProtectedRoute>
+        <MateriDetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/quiz/:subMateriId",
+    element: (
+      <ProtectedRoute>
+        <QuizPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/riwayat",
+    element: (
+      <ProtectedRoute>
+        <RiwayatPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/forum",
+    element: (
+      <ProtectedRoute>
+        <BantuanPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/threads/:id",
+    element: (
+      <ProtectedRoute>
+        <ThreadDetailPage />
+      </ProtectedRoute>
+    ),
+  },
 ]);
 
 // Render Aplikasi (tidak perlu diubah)
