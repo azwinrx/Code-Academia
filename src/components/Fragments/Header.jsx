@@ -90,7 +90,7 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full bg-[#132238] text-white p-4 flex items-center justify-between fixed z-10">
+    <header className="w-full bg-[#132238] text-white p-4 flex items-center justify-between sticky top-0 z-10">
       <div className="flex-1"></div>
       <div className="flex items-center gap-4">
         <img
@@ -161,7 +161,8 @@ export default function Header() {
                     {user?.email || "user@email.com"}
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
-                    Bergabung sejak: {/* Tampilkan tanggal bergabung jika ada */}
+                    Bergabung sejak:{" "}
+                    {/* Tampilkan tanggal bergabung jika ada */}
                   </div>
                 </div>
               </div>
