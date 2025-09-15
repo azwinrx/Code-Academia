@@ -139,7 +139,7 @@ export default function Header() {
           {showProfile && !search && (
             <div className="absolute right-0 mt-2 w-64 bg-white text-black rounded shadow-lg z-20 p-4">
               <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl"
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
                 onClick={() => setShowProfile(false)}
                 aria-label="Close"
               >
@@ -166,7 +166,7 @@ export default function Header() {
                 </div>
               </div>
               <button
-                className="w-full px-4 py-2 bg-[#132238] text-white rounded hover:bg-slate-500"
+                className="w-full px-4 py-2 bg-[#132238] text-white rounded hover:bg-slate-500 focus:outline-none"
                 onClick={logout}
               >
                 Logout

@@ -249,7 +249,7 @@ export default function ThreadDetailPage() {
           {/* Back Button */}
           <button
             onClick={() => navigate('/forum')}
-            className={`mb-6 flex items-center text-sm font-bold text-white ${buttonColor} hover:opacity-90 transition-colors px-4 py-2 rounded-lg`}
+            className={`mb-6 flex items-center text-sm font-bold text-white ${buttonColor} hover:opacity-90 transition-colors px-4 py-2 rounded-lg focus:outline-none`}
           >
             ← Kembali ke Forum
           </button>
@@ -289,7 +289,7 @@ export default function ThreadDetailPage() {
                       likedThreads[thread.id]
                         ? 'text-red-500 hover:text-red-600'
                         : 'text-[#333] hover:text-red-500'
-                    } disabled:opacity-50 disabled:cursor-not-allowed ${color || 'bg-white'} border-none`}
+                    } disabled:opacity-50 disabled:cursor-not-allowed ${color || 'bg-white'} border-none focus:outline-none`}
                   >
                     {likingThreads[thread.id] ? (
                       <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
@@ -370,7 +370,7 @@ export default function ThreadDetailPage() {
                       <button
                         type="submit"
                         disabled={submittingComment || !commentContent.trim()}
-                        className={`px-6 py-2 ${buttonColor} text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`px-6 py-2 ${buttonColor} text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none`}
                       >
                         {submittingComment ? 'Mengirim...' : 'Kirim Komentar'}
                       </button>

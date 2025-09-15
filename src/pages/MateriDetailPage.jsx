@@ -120,7 +120,7 @@ export default function MateriDetailPage() {
         <div className="p-5 border-b border-slate-700/50">
           <button
             onClick={() => navigate("/materi")}
-            className="flex items-center gap-2 text-sm text-slate-300 hover:text-white hover:cursor-pointer hover:bg-slate-700 transition-colors mb-4 border-none"
+            className="flex items-center gap-2 text-sm text-slate-300 hover:text-white hover:cursor-pointer hover:bg-slate-700 transition-colors mb-4 border-none focus:outline-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +147,7 @@ export default function MateriDetailPage() {
               <li key={sub.id}>
                 <button
                   onClick={() => setActiveSubMateri(sub)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all duration-200 border-none ${
+                  className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all duration-200 border-none focus:outline-none ${
                     activeSubMateri?.id === sub.id
                       ? "bg-sky-600/80 shadow-md border-none"
                       : "hover:bg-slate-700/50"
@@ -394,7 +394,7 @@ export default function MateriDetailPage() {
                   !subMateriWithQuiz.has(activeSubMateri.id) && (
                     <button
                       onClick={handleMarkComplete}
-                      className="bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-800 transition-colors flex items-center justify-center gap-2 border-none"
+                      className="bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-800 transition-colors flex items-center justify-center gap-2 border-none focus:outline-none"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -416,7 +416,7 @@ export default function MateriDetailPage() {
                 {subMateriWithQuiz.has(activeSubMateri.id) && (
                   <button
                     onClick={handleStartQuiz}
-                    className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition-colors flex items-center justify-center gap-2 border-none"
+                    className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition-colors flex items-center justify-center gap-2 border-none focus:outline-none"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
