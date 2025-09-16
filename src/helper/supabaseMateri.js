@@ -1,4 +1,5 @@
 import supabase from "./supabaseClient";
+import { decryptQuizSlug } from "./utils";
 
 // Gets all main materials, ordered by the 'urutan' field
 export async function getAllMateri() {
@@ -159,9 +160,53 @@ export async function getCoursesWithProgress(userId) {
 
 /**
  * Gets a sub-materi by slug generated from its title.
- * @param {string} slug - The slug generated from sub-materi title.
+ * @param {string} slug - The slug generated from sub-materi title or encrypted ID combination.
  */
 export async function getSubMateriBySlug(slug) {
+  // Cek jika slug menggunakan format encrypted ID
+  const decryptedData = decryptQuizSlug(slug);
+  
+  if (decryptedData) {
+    const { materiId, subMateriId } = decryptedData;
+    
+    const { data: subMateri, error } = await supabase
+      .from("sub_materi")
+      .select("id, judul, markdown_content, tipe, urutan, materi_id")
+      .eq("id", subMateriId)
+      .eq("materi_id", materiId)
+      .single();
+
+    if (error) {
+      console.error("Gagal mengambil sub materi dengan ID terenkripsi:", error);
+      return null;
+    }
+
+    return subMateri;
+  }
+
+  // Cek jika slug menggunakan format ID kombinasi lama (materi_id-sub_materi_id)
+  const idPattern = /^(\d+)-(\d+)$/;
+  const match = slug.match(idPattern);
+  
+  if (match) {
+    const [, materiId, subMateriId] = match;
+    
+    const { data: subMateri, error } = await supabase
+      .from("sub_materi")
+      .select("id, judul, markdown_content, tipe, urutan, materi_id")
+      .eq("id", parseInt(subMateriId))
+      .eq("materi_id", parseInt(materiId))
+      .single();
+
+    if (error) {
+      console.error("Gagal mengambil sub materi dengan ID:", error);
+      return null;
+    }
+
+    return subMateri;
+  }
+
+  // Fallback untuk slug lama (judul-based) - untuk kompatibilitas
   const { data: subMateriList, error } = await supabase
     .from("sub_materi")
     .select("id, judul, markdown_content, tipe, urutan, materi_id");

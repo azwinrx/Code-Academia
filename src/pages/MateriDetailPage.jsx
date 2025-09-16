@@ -6,7 +6,7 @@ import {
   addProgress,
 } from "../helper/supabaseMateri";
 import { hasQuiz } from "../helper/supabaseQuiz";
-import { generateSlug } from "../helper/utils";
+import { encryptQuizSlug } from "../helper/utils";
 import { AuthContext } from "../helper/authUtils";
 
 export default function MateriDetailPage() {
@@ -85,9 +85,10 @@ export default function MateriDetailPage() {
   }, [location.state, location.pathname, slug, user, navigate]);
 
   const handleStartQuiz = () => {
-    if (activeSubMateri) {
-      const quizSlug = generateSlug(activeSubMateri.judul);
-      navigate(`/quiz/${quizSlug}`);
+    if (activeSubMateri && materi) {
+      // Gunakan enkripsi untuk ID agar tidak terlihat di URL
+      const encryptedSlug = encryptQuizSlug(materi.id, activeSubMateri.id);
+      navigate(`/quiz/${encryptedSlug}`);
     }
   };
 
