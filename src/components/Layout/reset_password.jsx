@@ -67,7 +67,7 @@ const Reset_Password = () => {
             </div>
             <button
               onClick={() => navigate("/login")}
-              className="w-full py-2 px-4 bg-slate-900 text-white rounded-md hover:bg-slate-700 transition duration-300"
+              className="w-full py-2 px-4 bg-slate-900 text-white rounded-md hover:bg-slate-700 transition duration-300 focus:outline-none"
             >
               Back to Login
             </button>
@@ -93,7 +93,7 @@ const Reset_Password = () => {
 
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-slate-900 text-white rounded-md hover:bg-slate-700 transition duration-300 mb-4"
+              className="w-full py-2 px-4 bg-slate-900 text-white rounded-md hover:bg-slate-700 transition duration-300 mb-4 focus:outline-none"
               disabled={loading}
             >
               {loading ? "Sending..." : "Reset Password"}

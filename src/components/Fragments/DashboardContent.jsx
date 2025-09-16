@@ -146,7 +146,7 @@ export default function DashboardContent() {
                   <div style={{ backgroundColor: '#334155', width: `${courseToContinue.progress}%` }} className="h-2.5 rounded-full"></div>
                 </div>
               </div>
-              <button onClick={() => handleCourseClick(courseToContinue.slug)} className="mt-6 w-full md:w-auto bg-white/50 font-semibold py-2 px-6 rounded-lg hover:bg-white/80 transition-colors border-none">
+              <button onClick={() => handleCourseClick(courseToContinue.slug)} className="mt-6 w-full md:w-auto bg-white/50 font-semibold py-2 px-6 rounded-lg hover:bg-white/80 transition-colors border-none focus:outline-none">
                 Lanjutkan Belajar
               </button>
             </div>
