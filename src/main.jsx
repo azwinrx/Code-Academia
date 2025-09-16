@@ -12,7 +12,7 @@ import { AuthProvider } from "./helper/AuthContext.jsx";
 // ... (sisa import komponen halaman lainnya tetap sama)
 import LandingPage from "./components/Layout/landingPage.jsx";
 import Login from "./components/Layout/login.jsx";
-import Signup from "./components/Layout/Signup.jsx";
+import Signup from "./components/Layout/signup.jsx";
 import ResetPassword from "./components/Layout/reset_password.jsx";
 import ResetPasswordConfirm from "./components/Layout/reset_password_confirm.jsx";
 import Success from "./components/Layout/succestest.jsx";
