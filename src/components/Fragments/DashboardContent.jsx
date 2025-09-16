@@ -36,6 +36,22 @@ const DashboardSkeleton = () => (
   </main>
 );
 
+// Fungsi untuk mendapatkan sapaan berdasarkan waktu
+const getGreetingBasedOnTime = () => {
+  const now = new Date();
+  const hours = now.getHours();
+
+  if (hours >= 4 && hours < 10) {
+    return "Selamat pagi";
+  } else if (hours >= 10 && hours < 15) {
+    return "Selamat siang";
+  } else if (hours >= 15 && hours < 18) {
+    return "Selamat sore";
+  } else {
+    return "Selamat malam";
+  }
+};
+
 export default function DashboardContent() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -69,7 +85,7 @@ export default function DashboardContent() {
         datasets: [
           {
             data: [completedCount, totalCourses - completedCount],
-            backgroundColor: ['#334155', 'rgba(0, 0, 0, 0.1)'], // Dark color for progress, light for track
+            backgroundColor: ['#7f23cf', 'rgba(127, 35, 207, 0.1)'], // Dark color for progress, light for track
             borderWidth: 0,
             borderRadius: 5,
           },
@@ -102,8 +118,15 @@ export default function DashboardContent() {
   return (
     <main className="flex-1 p-6 md:p-8 overflow-y-auto">
       <section id="header-sambutan">
-        <h2 className="text-3xl font-bold text-black">Selamat pagi, {user?.user_metadata.full_name || 'Petualang'}</h2>
-        <p className="mt-1 text-slate-700">Kamu sedang berada di jalur yang tepat untuk menjadi ahli!</p>
+        <div className="flex items-center justify-start gap-3">
+          <h2 className="text-3xl font-bold text-black">{getGreetingBasedOnTime()}, {user?.user_metadata?.name || 'Petualang'}!</h2>
+          <img
+            src="/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
+            alt="Kobi"
+            className="w-10 -ml-1"
+          />
+        </div>
+          <p className="mt-1 text-slate-700">Setiap baris kode yang kamu tulis hari ini adalah langkah menuju masa depan.</p>
       </section>
 
       <div style={{ backgroundColor: pastelColors[3] }} className="mt-6 text-slate-800 p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-6">
@@ -112,7 +135,7 @@ export default function DashboardContent() {
           <p className="text-sm mt-1">Berikut adalah ringkasan dari perkembangan belajar kamu secara keseluruhan.</p>
 
           <div className="mt-4 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-black/10">
+            <div className="p-3 rounded-lg bg-purple-700/40">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="text-slate-800"><g fill="currentColor"><path d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z" /><path fillRule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12m11 9a9 9 0 1 1 0-18a9 9 0 0 1 0 18" clipRule="evenodd" /></g></svg>
             </div>
             <div>
@@ -142,11 +165,11 @@ export default function DashboardContent() {
                   <span>Progress</span>
                   <span>{courseToContinue.progress}%</span>
                 </div>
-                <div className="w-full bg-black/10 rounded-full h-2.5">
-                  <div style={{ backgroundColor: '#334155', width: `${courseToContinue.progress}%` }} className="h-2.5 rounded-full"></div>
+                <div className="w-full bg-[#c72a2a]/40 rounded-full h-2.5">
+                  <div style={{ backgroundColor: '#c72a2a', width: `${courseToContinue.progress}%` }} className="h-2.5 rounded-full"></div>
                 </div>
               </div>
-              <button onClick={() => handleCourseClick(courseToContinue.slug)} className="mt-6 w-full md:w-auto bg-white/50 font-semibold py-2 px-6 rounded-lg hover:bg-white/80 transition-colors border-none focus:outline-none">
+              <button onClick={() => handleCourseClick(courseToContinue.slug)} className="mt-6 w-full md:w-auto bg-[#c72a2a] font-semibold py-2 px-6 rounded-lg hover:bg-[#c72a2a]/80 transition-colors border-none focus:outline-none text-[#fff]">
                 Lanjutkan Belajar
               </button>
             </div>

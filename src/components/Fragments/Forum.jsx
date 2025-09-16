@@ -93,7 +93,7 @@ export default function Forum() {
     }
   };
 
-  
+
 
   const getThreadColor = (threadId) => {
     const colorMap = {
@@ -125,7 +125,7 @@ export default function Forum() {
     setFormData({ ...formData, image: file });
   };
 
-  
+
 
   if (error) {
     return (
@@ -158,7 +158,14 @@ export default function Forum() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
             <div className="flex-1 flex items-center gap-4">
               <div>
-                <h1 className="text-xl lg:text-2xl font-bold text-[#333] mb-2 lg:mb-0">Forum Diskusi</h1>
+                <div className="flex items-center mb-1">
+                  <img
+                    src="/Icon Kobi (maskot LogicBase)/kobiBingung.png"
+                    alt="Kobi"
+                    className="w-10 mr-1"
+                  />
+                  <h1 className="text-xl lg:text-2xl font-bold text-[#333] mb-2 lg:mb-0">Forum Diskusi</h1>
+                </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs lg:text-sm text-[#333]">Urutkan berdasarkan:</span>
                   <div className="relative">

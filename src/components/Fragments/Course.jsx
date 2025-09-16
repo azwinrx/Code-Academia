@@ -197,13 +197,13 @@ export default function Course() {
   };
 
   return (
-    <div className="pl-8 pr-6 pb-6 ">
-      <div className="flex items-center justify-start mb-1">
+    <div className="pl-8 pr-6 pb-6 mt-6">
+      <div className="flex items-center justify-start mb-5">
         <h1 className="text-3xl font-bold text-black">Jelajahi Materi</h1>
         <img
-          src="/Icon Kobi (maskot LogicBase)/kobiMelambai.svg"
+          src="/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
           alt="Kobi"
-          className="w-24 h-24 -ml-4"
+          className="w-10 ml-1"
         />
       </div>
 

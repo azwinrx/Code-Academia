@@ -92,8 +92,14 @@ export default function Riwayat() {
 
   return (
     <div className="p-6 sm:p-8">
-      <h1 className="text-3xl font-bold mb-8 text-black">Riwayat Aktivitas</h1>
-
+    <div className="flex items-center justify-start mb-5">
+      <h1 className="text-3xl font-bold text-black">Riwayat Aktivitas</h1>
+      <img
+            src="/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
+            alt="Kobi"
+            className="w-10 ml-1"
+          />
+    </div>
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (

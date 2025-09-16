@@ -13,10 +13,10 @@ export default function Sidebar() {
 
   return (
     <aside className="w-60 h-screen bg-[#132238] text-white flex flex-col p-4 fixed z-20">
-      <div className="flex items-center -ml-5 -mt-1">
+      <div className="flex items-center -ml-0.5 -mt-1 gap-7">
         <img
-          src="/Icon Kobi (maskot LogicBase)/kobiMelambai.svg"
-          className="w-24"
+          src="/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
+          className="w-10 mr-2"
         />
         <h1 className="text-3xl  font-bold -ml-8">LogicBase</h1>
       </div>
