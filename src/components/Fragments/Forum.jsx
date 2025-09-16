@@ -139,7 +139,7 @@ export default function Forum() {
             <p className="text-[#666] mb-6">{error}</p>
             <button
               onClick={loadForumThreads}
-              className="px-6 py-2 bg-[#77B1E3] text-white rounded-md hover:bg-[#5A9BD3] transition-colors"
+              className="px-6 py-2 bg-[#77B1E3] text-white rounded-md hover:bg-[#5A9BD3] transition-colors focus:outline-none"
             >
               Coba Lagi
             </button>
@@ -203,7 +203,7 @@ export default function Forum() {
                 </div>
               </div>
               <button
-                className="w-full lg:w-auto bg-purple-700 text-[#fff] py-2 lg:py-3 px-4 rounded-lg font-semibold hover:bg-purple-800 transition-all duration-200 shadow-md hover:shadow-lg text-sm lg:text-base border-none"
+                className="w-full lg:w-auto bg-purple-700 text-[#fff] py-2 lg:py-3 px-4 rounded-lg font-semibold hover:bg-purple-800 transition-all duration-200 shadow-md hover:shadow-lg text-sm lg:text-base border-none focus:outline-none"
                 onClick={() => setShowCreateModal(true)}
               >
                 📝 Buat Thread Baru
@@ -285,7 +285,7 @@ export default function Forum() {
                     <button
                       key={number + 1}
                       onClick={() => handlePageChange(number + 1)}
-                      className={`px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm border-none hover:text-white text-[#fff] ${currentPage === number + 1 ? 'bg-purple-700 text-white' : 'bg-purple-800'}`}>
+                      className={`px-3 lg:px-4 py-1 lg:py-2 rounded-md text-xs lg:text-sm border-none hover:text-white text-[#fff] focus:outline-none ${currentPage === number + 1 ? 'bg-purple-700 text-white' : 'bg-purple-800'}`}>
                       {number + 1}
                     </button>
                   ))}
@@ -312,7 +312,7 @@ export default function Forum() {
                 </div>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all duration-200 text-white hover:scale-110"
+                  className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all duration-200 text-white hover:scale-110 focus:outline-none"
                 >
                   <span className="text-xl font-semibold">×</span>
                 </button>
@@ -401,7 +401,7 @@ export default function Forum() {
                                   const fileInput = document.getElementById('thread-image-upload');
                                   if (fileInput) fileInput.value = '';
                                 }}
-                                className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                                className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg focus:outline-none"
                               >
                                 <span className="text-sm">×</span>
                               </button>
@@ -450,14 +450,14 @@ export default function Forum() {
                   <button
                     type="button"
                     onClick={() => setShowCreateModal(false)}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 font-medium hover:shadow-sm"
+                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 font-medium hover:shadow-sm focus:outline-none"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="px-6 py-3 bg-gradient-to-r from-[#77B1E3] to-[#5A9BD3] text-white rounded-xl hover:from-[#6AA2D6] hover:to-[#4A8BC6] transition-all duration-200 font-medium shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transform"
+                    className="px-6 py-3 bg-gradient-to-r from-[#77B1E3] to-[#5A9BD3] text-white rounded-xl hover:from-[#6AA2D6] hover:to-[#4A8BC6] transition-all duration-200 font-medium shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transform focus:outline-none"
                   >
                     {submitting ? (
                       <span className="flex items-center gap-2">

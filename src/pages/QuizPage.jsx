@@ -277,14 +277,14 @@ const QuizPage = () => {
             {!result.passed && (
               <button
                 onClick={handleRetry}
-                className="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors"
+                className="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors focus:outline-none"
               >
                 Coba Lagi
               </button>
             )}
             <button
               onClick={handleFinish}
-              className={`px-6 py-3 rounded-lg transition-colors ${
+              className={`px-6 py-3 rounded-lg transition-colors focus:outline-none ${
                 result.passed
                   ? "bg-green-600 text-white hover:bg-green-700"
                   : "bg-slate-600 text-white hover:bg-slate-700"
@@ -397,7 +397,7 @@ const QuizPage = () => {
             <button
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
-              className={`px-6 py-2 rounded-lg transition-colors ${
+              className={`px-6 py-2 rounded-lg transition-colors focus:outline-none ${
                 currentQuestionIndex === 0
                   ? "bg-slate-600 text-slate-400 cursor-not-allowed"
                   : "bg-slate-600 text-white hover:bg-slate-500"
@@ -425,7 +425,7 @@ const QuizPage = () => {
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className={`px-6 py-2 rounded-lg transition-colors ${
+                className={`px-6 py-2 rounded-lg transition-colors focus:outline-none ${
                   submitting
                     ? "bg-slate-600 text-slate-400 cursor-not-allowed"
                     : "bg-green-600 text-white hover:bg-green-700"
@@ -436,7 +436,7 @@ const QuizPage = () => {
             ) : (
               <button
                 onClick={handleNext}
-                className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors"
+                className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors focus:outline-none"
               >
                 Selanjutnya
               </button>

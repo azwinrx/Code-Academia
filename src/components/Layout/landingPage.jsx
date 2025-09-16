@@ -48,7 +48,7 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200 focus:outline-none"
             >
               <span className="sr-only">Open main menu</span>
               <Bars3Icon aria-hidden="true" className="size-6" />
@@ -100,7 +100,7 @@ export default function LandingPage() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-200"
+                className="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-200 focus:outline-none"
               >
                 <span className="sr-only">Close menu</span>
                 <XMarkIcon aria-hidden="true" className="size-6" />
@@ -129,7 +129,7 @@ export default function LandingPage() {
                   </a>
                   <a
                     href="/login"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-white bg-blue-600 hover:bg-blue-500"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-white bg-blue-600 hover:bg-blue-500 focus:outline-none"
                   >
                     Log in
                   </a>
