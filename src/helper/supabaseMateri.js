@@ -16,6 +16,27 @@ export async function getAllMateri() {
   return data;
 }
 
+// Search materials by name with proper sorting
+export async function searchMateri(searchTerm, limit = 10) {
+  if (!searchTerm || searchTerm.trim().length === 0) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from("judul_Materi")
+    .select("id, nama_materi, deskripsi, slug")
+    .ilike("nama_materi", `%${searchTerm.trim()}%`)
+    .order("nama_materi", { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error("Gagal mencari materi:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
 // Gets a single main material by its slug
 export async function getMateriBySlug(slug) {
   const { data, error } = await supabase
@@ -165,10 +186,10 @@ export async function getCoursesWithProgress(userId) {
 export async function getSubMateriBySlug(slug) {
   // Cek jika slug menggunakan format encrypted ID
   const decryptedData = decryptQuizSlug(slug);
-  
+
   if (decryptedData) {
     const { materiId, subMateriId } = decryptedData;
-    
+
     const { data: subMateri, error } = await supabase
       .from("sub_materi")
       .select("id, judul, markdown_content, tipe, urutan, materi_id")
@@ -187,10 +208,10 @@ export async function getSubMateriBySlug(slug) {
   // Cek jika slug menggunakan format ID kombinasi lama (materi_id-sub_materi_id)
   const idPattern = /^(\d+)-(\d+)$/;
   const match = slug.match(idPattern);
-  
+
   if (match) {
     const [, materiId, subMateriId] = match;
-    
+
     const { data: subMateri, error } = await supabase
       .from("sub_materi")
       .select("id, judul, markdown_content, tipe, urutan, materi_id")

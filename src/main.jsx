@@ -8,6 +8,7 @@ import {
 import "./index.css";
 
 import { AuthProvider } from "./helper/AuthContext.jsx";
+import { SearchProvider } from "./helper/SearchContext.jsx";
 
 // ... (sisa import komponen halaman lainnya tetap sama)
 import LandingPage from "./components/Layout/landingPage.jsx";
@@ -116,7 +117,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <SearchProvider>
+        <RouterProvider router={router} />
+      </SearchProvider>
     </AuthProvider>
   </StrictMode>
 );

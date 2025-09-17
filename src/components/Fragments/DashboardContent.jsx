@@ -1,16 +1,17 @@
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect, useRef, useMemo } from "react";
 import Chart from "chart.js/auto";
-import { AuthContext } from '../../helper/authUtils';
-import { getCoursesWithProgress } from '../../helper/supabaseMateri';
-import { useNavigate } from 'react-router-dom';
+import { AuthContext } from "../../helper/authUtils";
+import { getCoursesWithProgress } from "../../helper/supabaseMateri";
+import { useNavigate } from "react-router-dom";
+import { useSearch } from "../../helper/useSearch.js";
 
 const pastelColors = [
-  '#A2D1B0',
-  '#77B1E3',
-  '#F1AD8D',
-  '#A9A6E5',
-  '#A2CFD1',
-  '#E37777',
+  "#A2D1B0",
+  "#77B1E3",
+  "#F1AD8D",
+  "#A9A6E5",
+  "#A2CFD1",
+  "#E37777",
 ];
 
 const DashboardSkeleton = () => (
@@ -58,13 +59,12 @@ export default function DashboardContent() {
   const chartRef = useRef(null);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { searchTerm } = useSearch();
 
   useEffect(() => {
     if (user) {
       async function loadInitialData() {
-        if (courses.length === 0) {
-          setLoading(true);
-        }
+        setLoading(true);
         const coursesData = await getCoursesWithProgress(user.id);
         setCourses(coursesData);
         setLoading(false);
@@ -73,10 +73,21 @@ export default function DashboardContent() {
     }
   }, [user]);
 
+  // Filter courses based on search term
+  const filteredCourses = useMemo(() => {
+    if (!searchTerm || searchTerm.trim() === "") {
+      return courses;
+    }
+
+    return courses.filter((course) =>
+      course.nama_materi.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [courses, searchTerm]);
+
   useEffect(() => {
     if (loading || courses.length === 0 || !chartRef.current) return;
 
-    const completedCount = courses.filter(c => c.progress === 100).length;
+    const completedCount = courses.filter((c) => c.progress === 100).length;
     const totalCourses = courses.length;
 
     const chartInstance = new Chart(chartRef.current, {
@@ -85,7 +96,7 @@ export default function DashboardContent() {
         datasets: [
           {
             data: [completedCount, totalCourses - completedCount],
-            backgroundColor: ['#7f23cf', 'rgba(127, 35, 207, 0.1)'], // Dark color for progress, light for track
+            backgroundColor: ["#7f23cf", "rgba(127, 35, 207, 0.1)"], // Dark color for progress, light for track
             borderWidth: 0,
             borderRadius: 5,
           },
@@ -108,8 +119,16 @@ export default function DashboardContent() {
     navigate(`/materi/${slug}`);
   };
 
-  const overallProgress = courses.length > 0 ? Math.round(courses.filter(c => c.progress === 100).length / courses.length * 100) : 0;
-  const courseToContinue = courses.find(c => c.progress > 0 && c.progress < 100) || courses.find(c => c.progress === 0);
+  const overallProgress =
+    courses.length > 0
+      ? Math.round(
+          (courses.filter((c) => c.progress === 100).length / courses.length) *
+            100
+        )
+      : 0;
+  const courseToContinue =
+    filteredCourses.find((c) => c.progress > 0 && c.progress < 100) ||
+    filteredCourses.find((c) => c.progress === 0);
 
   if (loading) {
     return <DashboardSkeleton />;
@@ -119,27 +138,57 @@ export default function DashboardContent() {
     <main className="flex-1 p-6 md:p-8 overflow-y-auto">
       <section id="header-sambutan">
         <div className="flex items-center justify-start gap-3">
-          <h2 className="text-3xl font-bold text-black">{getGreetingBasedOnTime()}, {user?.user_metadata?.name || 'Petualang'}!</h2>
+          <h2 className="text-3xl font-bold text-black">
+            {getGreetingBasedOnTime()},{" "}
+            {user?.user_metadata?.name || "Petualang"}!
+          </h2>
           <img
             src="/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
             alt="Kobi"
             className="w-10 -ml-1"
           />
         </div>
-          <p className="mt-1 text-slate-700">Setiap baris kode yang kamu tulis hari ini adalah langkah menuju masa depan.</p>
+        <p className="mt-1 text-slate-700">
+          Setiap baris kode yang kamu tulis hari ini adalah langkah menuju masa
+          depan.
+        </p>
       </section>
 
-      <div style={{ backgroundColor: pastelColors[3] }} className="mt-6 text-slate-800 p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-6">
+      <div
+        style={{ backgroundColor: pastelColors[3] }}
+        className="mt-6 text-slate-800 p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-6"
+      >
         <div className="flex-1">
           <h3 className="font-bold text-lg">Ringkasan Mingguan</h3>
-          <p className="text-sm mt-1">Berikut adalah ringkasan dari perkembangan belajar kamu secara keseluruhan.</p>
+          <p className="text-sm mt-1">
+            Berikut adalah ringkasan dari perkembangan belajar kamu secara
+            keseluruhan.
+          </p>
 
           <div className="mt-4 flex items-center gap-4">
             <div className="p-3 rounded-lg bg-purple-700/40">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="text-slate-800"><g fill="currentColor"><path d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z" /><path fillRule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12m11 9a9 9 0 1 1 0-18a9 9 0 0 1 0 18" clipRule="evenodd" /></g></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                className="text-slate-800"
+              >
+                <g fill="currentColor">
+                  <path d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z" />
+                  <path
+                    fillRule="evenodd"
+                    d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12m11 9a9 9 0 1 1 0-18a9 9 0 0 1 0 18"
+                    clipRule="evenodd"
+                  />
+                </g>
+              </svg>
             </div>
             <div>
-              <p className="font-semibold">{courses.filter(c => c.progress === 100).length} Materi Selesai</p>
+              <p className="font-semibold">
+                {courses.filter((c) => c.progress === 100).length} Materi
+                Selesai
+              </p>
               <p className="text-sm">dari total {courses.length} materi</p>
             </div>
           </div>
@@ -156,20 +205,41 @@ export default function DashboardContent() {
       {courseToContinue && (
         <section className="mt-8">
           <h3 className="text-2xl font-bold text-black">Lanjutkan Belajar</h3>
-          <div style={{ backgroundColor: pastelColors[5] }} className="mt-4 p-4 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-6 text-slate-800">
+          <div
+            style={{ backgroundColor: pastelColors[5] }}
+            className="mt-4 p-4 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-6 text-slate-800"
+          >
             <div className="w-full">
-              <p className="text-sm">Status: {courseToContinue.status === 'Completed' ? 'Selesai' : courseToContinue.status === 'In Progress' ? 'Sedang Dikerjakan' : 'Belum Dimulai'}</p>
-              <h4 className="text-xl font-bold mt-1">{courseToContinue.nama_materi}</h4>
+              <p className="text-sm">
+                Status:{" "}
+                {courseToContinue.status === "Completed"
+                  ? "Selesai"
+                  : courseToContinue.status === "In Progress"
+                  ? "Sedang Dikerjakan"
+                  : "Belum Dimulai"}
+              </p>
+              <h4 className="text-xl font-bold mt-1">
+                {courseToContinue.nama_materi}
+              </h4>
               <div className="mt-4">
                 <div className="flex justify-between text-sm mb-1">
                   <span>Progress</span>
                   <span>{courseToContinue.progress}%</span>
                 </div>
                 <div className="w-full bg-[#c72a2a]/40 rounded-full h-2.5">
-                  <div style={{ backgroundColor: '#c72a2a', width: `${courseToContinue.progress}%` }} className="h-2.5 rounded-full"></div>
+                  <div
+                    style={{
+                      backgroundColor: "#c72a2a",
+                      width: `${courseToContinue.progress}%`,
+                    }}
+                    className="h-2.5 rounded-full"
+                  ></div>
                 </div>
               </div>
-              <button onClick={() => handleCourseClick(courseToContinue.slug)} className="mt-6 w-full md:w-auto bg-[#c72a2a] font-semibold py-2 px-6 rounded-lg hover:bg-[#c72a2a]/80 transition-colors border-none focus:outline-none text-[#fff]">
+              <button
+                onClick={() => handleCourseClick(courseToContinue.slug)}
+                className="mt-6 w-full md:w-auto bg-[#c72a2a] font-semibold py-2 px-6 rounded-lg hover:bg-[#c72a2a]/80 transition-colors border-none focus:outline-none text-[#fff]"
+              >
                 Lanjutkan Belajar
               </button>
             </div>
@@ -180,26 +250,54 @@ export default function DashboardContent() {
       <section id="kursus-saya" className="mt-8">
         <h3 className="text-2xl font-bold text-black">Materi Saya</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-          {courses.filter(course => course.progress > 0).map((course, index) => (
-            <div
-              key={course.id}
-              style={{ backgroundColor: pastelColors[index % pastelColors.length] }}
-              className="p-4 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl text-slate-800 cursor-pointer"
-              onClick={() => handleCourseClick(course.slug)}
-            >
-              <h4 className="font-bold mt-3 text-lg">{course.nama_materi}</h4>
-              <p className="text-sm text-slate-700 mt-1">{course.deskripsi || 'No description'}</p>
-              <div className="mt-3">
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>{course.progress === 100 ? "Selesai" : "Progres"}</span>
-                  <span>{course.progress}%</span>
+          {filteredCourses.filter((course) => course.progress > 0).length >
+          0 ? (
+            filteredCourses
+              .filter((course) => course.progress > 0)
+              .map((course, index) => (
+                <div
+                  key={course.id}
+                  style={{
+                    backgroundColor: pastelColors[index % pastelColors.length],
+                  }}
+                  className="p-4 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl text-slate-800 cursor-pointer"
+                  onClick={() => handleCourseClick(course.slug)}
+                >
+                  <h4 className="font-bold mt-3 text-lg">
+                    {course.nama_materi}
+                  </h4>
+                  <p className="text-sm text-slate-700 mt-1">
+                    {course.deskripsi || "No description"}
+                  </p>
+                  <div className="mt-3">
+                    <div className="flex justify-between text-xs font-semibold mb-1">
+                      <span>
+                        {course.progress === 100 ? "Selesai" : "Progres"}
+                      </span>
+                      <span>{course.progress}%</span>
+                    </div>
+                    <div className="w-full bg-black/10 rounded-full h-2">
+                      <div
+                        className="bg-white/80 h-2 rounded-full"
+                        style={{ width: `${course.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full bg-black/10 rounded-full h-2">
-                  <div className="bg-white/80 h-2 rounded-full" style={{ width: `${course.progress}%` }}></div>
-                </div>
-              </div>
+              ))
+          ) : searchTerm && searchTerm.trim() !== "" ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500 text-lg">
+                Tidak ada materi yang ditemukan untuk "{searchTerm}"
+              </p>
             </div>
-          ))}
+          ) : courses.filter((course) => course.progress > 0).length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500 text-lg">
+                Belum ada materi yang dimulai
+              </p>
+            </div>
+          ) : null}
         </div>
       </section>
     </main>
