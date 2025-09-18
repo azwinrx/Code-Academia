@@ -108,7 +108,7 @@ export default function Header() {
       <div className="flex items-center gap-4">
         <img
           src="/Icon Kobi (maskot LogicBase)/KobiMengajak.svg"
-          className="h-24 absolute right-52"
+          className="h-24 absolute right-64"
         />
         <div className="relative">
           <input

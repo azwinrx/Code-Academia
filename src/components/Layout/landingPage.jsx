@@ -55,12 +55,11 @@ export default function LandingPage() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
               <span className="sr-only">LogicBase</span>
-              <div
-                className="h-8 w-8 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: pastelColors[3] }}
-              >
-                <CodeBracketIcon className="h-5 w-5 text-slate-800" />
-              </div>
+              <img
+                src="public/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
+                alt="LogicBase Logo"
+                className="h-16 w-auto object-contain align-middle "
+              />
               <span className="text-xl font-bold text-slate-800">
                 LogicBase
               </span>
