@@ -26,6 +26,7 @@ import MateriDetailPage from "./pages/MateriDetailPage.jsx";
 import QuizPage from "./pages/QuizPage.jsx";
 import ProtectedRoute from "./components/Fragments/ProtectedRoute.jsx";
 import RedirectIfAuthenticated from "./components/Fragments/RedirectIfAuthenticated.jsx";
+import QuizActiveChecker from "./components/Fragments/QuizActiveChecker.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -59,7 +60,9 @@ const router = createBrowserRouter([
     path: "/beranda",
     element: (
       <ProtectedRoute>
-        <DashboardPage />
+        <QuizActiveChecker>
+          <DashboardPage />
+        </QuizActiveChecker>
       </ProtectedRoute>
     ),
   },
@@ -67,7 +70,9 @@ const router = createBrowserRouter([
     path: "/materi",
     element: (
       <ProtectedRoute>
-        <CoursePage />
+        <QuizActiveChecker>
+          <CoursePage />
+        </QuizActiveChecker>
       </ProtectedRoute>
     ),
   },
@@ -75,7 +80,9 @@ const router = createBrowserRouter([
     path: "/materi/:slug",
     element: (
       <ProtectedRoute>
-        <MateriDetailPage />
+        <QuizActiveChecker>
+          <MateriDetailPage />
+        </QuizActiveChecker>
       </ProtectedRoute>
     ),
   },
@@ -91,7 +98,9 @@ const router = createBrowserRouter([
     path: "/riwayat",
     element: (
       <ProtectedRoute>
-        <RiwayatPage />
+        <QuizActiveChecker>
+          <RiwayatPage />
+        </QuizActiveChecker>
       </ProtectedRoute>
     ),
   },
@@ -99,7 +108,9 @@ const router = createBrowserRouter([
     path: "/forum",
     element: (
       <ProtectedRoute>
-        <BantuanPage />
+        <QuizActiveChecker>
+          <BantuanPage />
+        </QuizActiveChecker>
       </ProtectedRoute>
     ),
   },
@@ -107,7 +118,9 @@ const router = createBrowserRouter([
     path: "/threads/:id",
     element: (
       <ProtectedRoute>
-        <ThreadDetailPage />
+        <QuizActiveChecker>
+          <ThreadDetailPage />
+        </QuizActiveChecker>
       </ProtectedRoute>
     ),
   },

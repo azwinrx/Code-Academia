@@ -7,6 +7,14 @@ import {
 import { getSubMateriBySlug } from "../helper/supabaseMateri";
 import { showToast } from "../helper/toastUtil";
 import { AuthContext } from "../helper/authUtils";
+import { 
+  saveQuizState, 
+  getQuizState, 
+  clearQuizState, 
+  calculateRemainingTime, 
+  updateQuizAnswers, 
+  markQuizCompleted 
+} from "../helper/quizPersistence";
 
 const QuizPage = () => {
   const { slug } = useParams();
@@ -24,6 +32,7 @@ const QuizPage = () => {
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [timerActive, setTimerActive] = useState(false);
   const [shouldAutoSubmit, setShouldAutoSubmit] = useState(false);
+  const [isQuizActive, setIsQuizActive] = useState(false); // Track if quiz is in progress
 
   // Format time helper function
   const formatTime = (seconds) => {
@@ -35,6 +44,35 @@ const QuizPage = () => {
   const loadQuiz = useCallback(async () => {
     try {
       setLoading(true);
+
+      // Check if there's existing quiz state first
+      const existingState = getQuizState();
+      if (existingState && existingState.userId === user?.id && existingState.slug === slug) {
+        // Resume existing quiz
+        const remainingTime = calculateRemainingTime(existingState.startTime, existingState.initialTimeLimit);
+        
+        if (remainingTime > 0) {
+          // Resume the quiz
+          setTimeLeft(remainingTime);
+          setAnswers(existingState.answers || {});
+          setCurrentQuestionIndex(existingState.currentQuestionIndex || 0);
+          
+          // Get quiz data
+          const quizData = await getCompleteQuizBySlug(slug);
+          setQuiz(quizData);
+          
+          // Get sub materi
+          const subMateri = await getSubMateriBySlug(slug);
+          setSubMateriId(subMateri?.id);
+          
+          showToast(`Quiz dilanjutkan. Sisa waktu: ${Math.floor(remainingTime/60)}:${(remainingTime%60).toString().padStart(2, '0')}`, "info");
+          setLoading(false);
+          return;
+        } else {
+          // Time expired, clear state
+          clearQuizState();
+        }
+      }
 
       // Get sub materi by slug first
       const subMateri = await getSubMateriBySlug(slug);
@@ -63,7 +101,7 @@ const QuizPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [slug, navigate]);
+  }, [slug, navigate, user?.id]);
 
   const handleSubmit = useCallback(
     async (isAutoSubmit = false) => {
@@ -85,6 +123,7 @@ const QuizPage = () => {
       try {
         setSubmitting(true);
         setTimerActive(false); // Stop timer when submitting
+        setIsQuizActive(false); // Mark quiz as inactive when submitting
 
         const quizResult = await submitQuizAnswersAndMarkComplete(
           quiz.id,
@@ -94,6 +133,9 @@ const QuizPage = () => {
         );
         setResult(quizResult);
         setShowResult(true);
+
+        // Clear quiz state from localStorage when submitted
+        markQuizCompleted();
 
         const message = isAutoSubmit
           ? `Waktu habis! Skor Anda ${quizResult.score}% dari ${
@@ -152,40 +194,146 @@ const QuizPage = () => {
 
   // Start timer when quiz is loaded
   useEffect(() => {
-    if (quiz && !timerActive && !showResult) {
+    if (quiz && !timerActive && !showResult && user) {
       setTimerActive(true);
+      setIsQuizActive(true); // Mark quiz as active when timer starts
+      
+      // Save initial quiz state to localStorage (only if not resuming)
+      const existingState = getQuizState();
+      if (!existingState || existingState.userId !== user.id || existingState.slug !== slug) {
+        const initialState = {
+          userId: user.id,
+          quizId: quiz.id,
+          slug: slug,
+          startTime: Date.now(),
+          initialTimeLimit: timeLeft,
+          answers: answers,
+          currentQuestionIndex: currentQuestionIndex,
+          isActive: true
+        };
+        saveQuizState(initialState);
+      }
     }
-  }, [quiz, timerActive, showResult]);
+  }, [quiz, timerActive, showResult, user, slug, timeLeft, answers, currentQuestionIndex]);
+
+  // Prevent navigation during active quiz
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isQuizActive && !showResult) {
+        e.preventDefault();
+        e.returnValue = 'Quiz sedang berlangsung. Yakin ingin meninggalkan halaman?';
+        return 'Quiz sedang berlangsung. Yakin ingin ingin meninggalkan halaman?';
+      }
+    };
+
+    const handlePopState = (e) => {
+      if (isQuizActive && !showResult) {
+        e.preventDefault();
+        // Push the current state back to prevent navigation
+        window.history.pushState(null, null, window.location.pathname);
+        showToast("Tidak dapat keluar dari quiz yang sedang berlangsung", "warning");
+        return false;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && isQuizActive && !showResult) {
+        showToast("Jangan tinggalkan tab quiz!", "warning");
+      }
+    };
+
+    if (isQuizActive && !showResult) {
+      // Add beforeunload listener
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      
+      // Add popstate listener to prevent back navigation
+      window.addEventListener('popstate', handlePopState);
+      
+      // Add visibility change listener
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      
+      // Push initial state to enable back button blocking
+      window.history.pushState(null, null, window.location.pathname);
+    }
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isQuizActive, showResult]);
 
   const handleAnswerSelect = (questionId, optionId) => {
-    setAnswers((prev) => ({
-      ...prev,
+    const newAnswers = {
+      ...answers,
       [questionId]: optionId,
-    }));
+    };
+    setAnswers(newAnswers);
+    
+    // Update answers in localStorage
+    if (user?.id) {
+      updateQuizAnswers(user.id, newAnswers, currentQuestionIndex);
+    }
   };
 
   const handleNext = () => {
     if (currentQuestionIndex < quiz.questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+      const newIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(newIndex);
+      
+      // Update question index in localStorage
+      if (user?.id) {
+        updateQuizAnswers(user.id, answers, newIndex);
+      }
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
+      const newIndex = currentQuestionIndex - 1;
+      setCurrentQuestionIndex(newIndex);
+      
+      // Update question index in localStorage
+      if (user?.id) {
+        updateQuizAnswers(user.id, answers, newIndex);
+      }
     }
   };
 
   const handleRetry = () => {
+    // Clear existing state
+    clearQuizState();
+    
     setAnswers({});
     setCurrentQuestionIndex(0);
     setShowResult(false);
     setResult(null);
     setTimeLeft(300); // Reset timer to 5 minutes
     setTimerActive(true); // Restart timer
+    setIsQuizActive(true); // Mark quiz as active again
+    
+    // Save new quiz state
+    if (user && quiz) {
+      const newState = {
+        userId: user.id,
+        quizId: quiz.id,
+        slug: slug,
+        startTime: Date.now(),
+        initialTimeLimit: 300,
+        answers: {},
+        currentQuestionIndex: 0,
+        isActive: true
+      };
+      saveQuizState(newState);
+    }
   };
 
   const handleFinish = () => {
+    setIsQuizActive(false); // Mark quiz as inactive when finishing
+    
+    // Clear quiz state from localStorage
+    markQuizCompleted();
+    
     // Redirect back with refresh parameter if passed
     if (result?.passed) {
       navigate(-1, { state: { refreshProgress: true } });
