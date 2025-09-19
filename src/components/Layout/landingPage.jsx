@@ -406,7 +406,7 @@ export default function LandingPage() {
         {/* Stats Section */}
         <div
           id="stats"
-          className="py-12 sm:py-16 scroll-mt-20 "
+          className="py-12 sm:py-16 scroll-mt-20 rounded-3xl"
           style={{ backgroundColor: pastelColors[3] }}
         >
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
