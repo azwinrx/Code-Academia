@@ -60,14 +60,7 @@ const Signup = () => {
     <div
       className="flex justify-center items-center min-h-screen w-full"
       style={{
-        backgroundColor: "#5296A5",
-        backgroundImage: `
-          radial-gradient(circle at 20% 30%, ${pastelColors[3]}33, transparent 40%),
-          radial-gradient(circle at 80% 70%, ${pastelColors[0]}33, transparent 40%),
-          radial-gradient(circle at 40% 90%, ${pastelColors[1]}33, transparent 40%)
-        `,
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
+        backgroundColor: "#A9A6E5", // Lavender purple - kontras dengan mint blue card
       }}
     >
       <div

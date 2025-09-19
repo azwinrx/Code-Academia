@@ -27,24 +27,19 @@ export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const pastelColors = [
-    "#A2D1B0",
-    "#77B1E3",
-    "#F1AD8D",
-    "#A9A6E5",
-    "#A2CFD1",
-    "#E37777",
+    "#A2D1B0", // Soft green - sama dengan halaman materi
+    "#77B1E3", // Light blue - sama dengan halaman materi  
+    "#F1AD8D", // Peach orange - sama dengan halaman materi
+    "#A9A6E5", // Lavender purple - sama dengan halaman materi
+    "#A2CFD1", // Mint blue - soft dan ramah anak
+    "#E37777", // Coral pink - sama dengan halaman materi
   ];
 
   return (
     <div
       className="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50"
       style={{
-        backgroundColor: "#5296A5",
-        backgroundImage: `
-        radial-gradient(circle at 20% 30%, ${pastelColors[0]}33, transparent 40%),
-        radial-gradient(circle at 80% 70%, ${pastelColors[2]}33, transparent 40%),
-        radial-gradient(circle at 40% 90%, ${pastelColors[3]}33, transparent 40%)
-      `,
+        backgroundColor: "#FFF8E1", // Light cream yellow - netral dan kontras dengan semua elemen colorful
       }}
     >
       <header className="absolute inset-x-0 top-0 z-50">
@@ -60,7 +55,7 @@ export default function LandingPage() {
                 alt="LogicBase Logo"
                 className="h-16 w-auto object-contain align-middle "
               />
-              <span className="text-xl font-bold text-slate-800">
+              <span className="text-3xl font-bold text-slate-800">
                 LogicBase
               </span>
             </a>
@@ -80,7 +75,7 @@ export default function LandingPage() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm/6 font-semibold text-slate-800 hover:text-purple-600 transition-colors"
+                className="text-sm/6 font-semibold text-slate-700 hover:text-purple-600 transition-colors"
               >
                 {item.name}
               </a>
@@ -95,7 +90,7 @@ export default function LandingPage() {
             </a>
             <a
               href="/login"
-              className="rounded-md px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:shadow-md transition-all duration-300"
+              className="rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:shadow-md transition-all duration-300"
               style={{ backgroundColor: pastelColors[5] }}
             >
               Masuk
@@ -115,12 +110,11 @@ export default function LandingPage() {
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
                 <span className="sr-only">LogicBase</span>
-                <div
-                  className="h-8 w-8 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: pastelColors[3] }}
-                >
-                  <CodeBracketIcon className="h-5 w-5 text-slate-800" />
-                </div>
+                <img
+                  src="/Icon Kobi (maskot LogicBase)/KobiMengajak.svg"
+                  alt="LogicBase Logo"
+                  className="h-8 w-auto object-contain align-middle"
+                />
                 <span className="text-lg font-bold text-slate-800">
                   LogicBase
                 </span>
@@ -412,7 +406,7 @@ export default function LandingPage() {
         {/* Stats Section */}
         <div
           id="stats"
-          className="py-12 sm:py-16 scroll-mt-20"
+          className="py-12 sm:py-16 scroll-mt-20 "
           style={{ backgroundColor: pastelColors[3] }}
         >
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
