@@ -26,8 +26,22 @@ const navigation = [
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const pastelColors = [
+    "#A2D1B0", // Soft green - sama dengan halaman materi
+    "#77B1E3", // Light blue - sama dengan halaman materi  
+    "#F1AD8D", // Peach orange - sama dengan halaman materi
+    "#A9A6E5", // Lavender purple - sama dengan halaman materi
+    "#A2CFD1", // Mint blue - soft dan ramah anak
+    "#E37777", // Coral pink - sama dengan halaman materi
+  ];
+
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+    <div
+      className="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50"
+      style={{
+        backgroundColor: "#FFF8E1", // Light cream yellow - netral dan kontras dengan semua elemen colorful
+      }}
+    >
       <header className="absolute inset-x-0 top-0 z-50">
         <nav
           aria-label="Global"
@@ -36,10 +50,12 @@ export default function LandingPage() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
               <span className="sr-only">LogicBase</span>
-              <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                <CodeBracketIcon className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
+              <img
+                src="public/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
+                alt="LogicBase Logo"
+                className="h-16 w-auto object-contain align-middle "
+              />
+              <span className="text-3xl font-bold text-slate-800">
                 LogicBase
               </span>
             </a>
@@ -48,7 +64,7 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200 focus:outline-none"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-slate-800 focus:outline-none"
             >
               <span className="sr-only">Open main menu</span>
               <Bars3Icon aria-hidden="true" className="size-6" />
@@ -59,7 +75,7 @@ export default function LandingPage() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm/6 font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="text-sm/6 font-semibold text-slate-700 hover:text-purple-600 transition-colors"
               >
                 {item.name}
               </a>
@@ -68,15 +84,16 @@ export default function LandingPage() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center space-x-4">
             <a
               href="/signup"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+              className="text-sm font-semibold text-purple-600 hover:text-purple-500"
             >
-              Sign up
+              Daftar
             </a>
             <a
               href="/login"
-              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:shadow-md transition-all duration-300"
+              style={{ backgroundColor: pastelColors[5] }}
             >
-              Log in
+              Masuk
             </a>
           </div>
         </nav>
@@ -86,14 +103,19 @@ export default function LandingPage() {
           className="lg:hidden"
         >
           <div className="fixed inset-0 z-50" />
-          <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-gray-900 dark:sm:ring-gray-100/10">
+          <DialogPanel
+            className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+            style={{ backgroundColor: pastelColors[0] }}
+          >
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
                 <span className="sr-only">LogicBase</span>
-                <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <CodeBracketIcon className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-lg font-bold text-gray-900 dark:text-white">
+                <img
+                  src="/Icon Kobi (maskot LogicBase)/KobiMengajak.svg"
+                  alt="LogicBase Logo"
+                  className="h-8 w-auto object-contain align-middle"
+                />
+                <span className="text-lg font-bold text-slate-800">
                   LogicBase
                 </span>
               </a>
@@ -157,25 +179,25 @@ export default function LandingPage() {
         {/* Hero Section */}
         <div className="mx-auto max-w-4xl py-16 sm:py-24 lg:py-32">
           <div className="hidden sm:mb-6 sm:flex sm:justify-center">
-            <div className="relative rounded-full px-4 py-2 text-sm leading-6 text-gray-600 ring-1 ring-blue-600/20 hover:ring-blue-600/30 bg-blue-50/50 dark:bg-blue-900/20 dark:text-blue-300 dark:ring-blue-400/30">
-              � Tempat Seru Belajar Coding untuk Anak-Anak{" "}
-              <a
-                href="#about"
-                className="font-semibold text-blue-600 dark:text-blue-400"
-              >
+            <div
+              className="relative rounded-full px-4 py-2 text-sm leading-6 text-slate-800 ring-1 ring-purple-400/30 hover:ring-purple-400/50 transition-all duration-300"
+              style={{ backgroundColor: `${pastelColors[3]}77` }}
+            >
+              🎉 Tempat Seru Belajar Coding untuk Anak-Anak{" "}
+              <a href="#about" className="font-semibold text-purple-600">
                 <span aria-hidden="true" className="absolute inset-0" />
                 Yuk Lihat! <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl dark:text-white">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-800 sm:text-6xl lg:text-7xl">
               Hai Selamat Datang di{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
                 LogicBase
               </span>
             </h1>
-            <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="mt-4 text-lg leading-8 text-slate-700 max-w-3xl mx-auto">
               Tempat seru untuk belajar logika dasar coding! Kita akan belajar
               cara berpikir komputer melalui materi yang mudah dipahami, lalu
               menguji pemahaman dengan quiz yang menyenangkan. Bergabunglah
@@ -185,13 +207,14 @@ export default function LandingPage() {
             <div className="mt-8 flex items-center justify-center gap-x-6">
               <a
                 href="#about"
-                className="rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:from-blue-500 hover:to-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transform hover:scale-105 transition-all duration-200"
+                className="rounded-md px-6 py-3 text-sm font-semibold text-slate-800 shadow-lg hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600 transform hover:scale-105 transition-all duration-200"
+                style={{ backgroundColor: pastelColors[0] }}
               >
                 🎯 Ayo Mulai Belajar!
               </a>
               <a
                 href="#features"
-                className="text-sm font-semibold leading-6 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="text-sm font-semibold leading-6 text-slate-800 hover:text-purple-600 transition-colors"
               >
                 Lihat Fitur Keren <span aria-hidden="true">→</span>
               </a>
@@ -205,10 +228,10 @@ export default function LandingPage() {
           className="mx-auto max-w-7xl px-6 lg:px-8 pb-12 sm:pb-16 scroll-mt-20"
         >
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-800 sm:text-4xl">
               Tentang LogicBase
             </h2>
-            <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
+            <p className="mt-3 text-lg leading-8 text-slate-700">
               LogicBase adalah tempat yang super seru untuk anak-anak belajar
               logika dasar coding! Di sini kita akan belajar cara berpikir
               seperti programmer melalui materi yang mudah dipahami, lalu
@@ -218,14 +241,17 @@ export default function LandingPage() {
 
           <div className="mx-auto mt-8 max-w-2xl sm:mt-12 lg:mt-16 lg:max-w-4xl">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
+              <div
+                className="rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[1] }}
+              >
                 <div className="flex items-center justify-center gap-x-3 mb-4">
-                  <HeartIcon className="h-8 w-8 flex-none text-blue-600" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <HeartIcon className="h-8 w-8 flex-none text-slate-800" />
+                  <h3 className="text-xl font-semibold text-slate-800">
                     Impian Kami
                   </h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-slate-700">
                   Kami ingin semua anak-anak di Indonesia bisa belajar logika
                   dasar coding dengan cara yang menyenangkan! LogicBase dibuat
                   supaya kalian bisa memahami cara berpikir programmer dan siap
@@ -233,14 +259,17 @@ export default function LandingPage() {
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
+              <div
+                className="rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[2] }}
+              >
                 <div className="flex items-center justify-center gap-x-3 mb-4">
-                  <RocketLaunchIcon className="h-8 w-8 flex-none text-blue-600" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <RocketLaunchIcon className="h-8 w-8 flex-none text-slate-800" />
+                  <h3 className="text-xl font-semibold text-slate-800">
                     Misi Kami
                   </h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-slate-700">
                   Mengajarkan logika dasar coding kepada anak-anak dengan cara
                   yang seru dan mudah dipahami! Kita akan belajar melalui materi
                   teks yang menarik, lalu menguji pemahaman dengan quiz
@@ -257,10 +286,10 @@ export default function LandingPage() {
           className="mx-auto max-w-7xl px-6 lg:px-8 pb-12 sm:pb-16 scroll-mt-20"
         >
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-800 sm:text-4xl">
               Fitur-Fitur Keren LogicBase
             </h2>
-            <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
+            <p className="mt-3 text-lg leading-8 text-slate-700">
               LogicBase punya sistem belajar yang seru! Kalian akan membaca
               materi tentang logika coding yang mudah dipahami, lalu menguji
               pemahaman dengan quiz yang menyenangkan!
@@ -269,12 +298,15 @@ export default function LandingPage() {
 
           <div className="mx-auto mt-8 max-w-2xl sm:mt-12 lg:mt-16 lg:max-w-none">
             <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-8 lg:max-w-none lg:grid-cols-3">
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                  <BookOpenIcon className="h-8 w-8 flex-none text-blue-600" />
+              <div
+                className="flex flex-col rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[0] }}
+              >
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-slate-800">
+                  <BookOpenIcon className="h-8 w-8 flex-none text-slate-800" />
                   Materi Logika Coding
                 </dt>
-                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
+                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-slate-700">
                   <p className="flex-auto">
                     Materi pembelajaran logika dasar coding yang disusun dengan
                     bahasa sederhana dan mudah dipahami. Setiap topik dijelaskan
@@ -283,12 +315,15 @@ export default function LandingPage() {
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                  <TrophyIcon className="h-8 w-8 flex-none text-blue-600" />
+              <div
+                className="flex flex-col rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[1] }}
+              >
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-slate-800">
+                  <TrophyIcon className="h-8 w-8 flex-none text-slate-800" />
                   Quiz Interaktif
                 </dt>
-                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
+                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-slate-700">
                   <p className="flex-auto">
                     Setelah membaca materi, kalian akan mengerjakan quiz untuk
                     menguji pemahaman. Quiz dibuat menyenangkan dengan berbagai
@@ -297,12 +332,15 @@ export default function LandingPage() {
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                  <AcademicCapIcon className="h-8 w-8 flex-none text-blue-600" />
+              <div
+                className="flex flex-col rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[2] }}
+              >
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-slate-800">
+                  <AcademicCapIcon className="h-8 w-8 flex-none text-slate-800" />
                   Dashboard Belajar
                 </dt>
-                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
+                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-slate-700">
                   <p className="flex-auto">
                     Tempat keren untuk melihat progres belajar kalian! Di sini
                     kalian bisa lihat materi apa saja yang sudah dipelajari dan
@@ -311,12 +349,15 @@ export default function LandingPage() {
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                  <UserGroupIcon className="h-8 w-8 flex-none text-blue-600" />
+              <div
+                className="flex flex-col rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[3] }}
+              >
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-slate-800">
+                  <UserGroupIcon className="h-8 w-8 flex-none text-slate-800" />
                   Tim Bantuan
                 </dt>
-                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
+                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-slate-700">
                   <p className="flex-auto">
                     Ada kakak-kakak yang siap membantu kalau kalian kebingungan
                     dengan materi! Kalian juga bisa bertanya ke teman-teman lain
@@ -325,12 +366,15 @@ export default function LandingPage() {
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                  <CodeBracketIcon className="h-8 w-8 flex-none text-blue-600" />
+              <div
+                className="flex flex-col rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[4] }}
+              >
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-slate-800">
+                  <CodeBracketIcon className="h-8 w-8 flex-none text-slate-800" />
                   Belajar Logika Bertahap
                 </dt>
-                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
+                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-slate-700">
                   <p className="flex-auto">
                     Sistem pembelajaran yang tersusun dari dasar sampai mahir.
                     Mulai dari konsep sederhana hingga logika yang lebih
@@ -339,12 +383,15 @@ export default function LandingPage() {
                 </dd>
               </div>
 
-              <div className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                  <StarIcon className="h-8 w-8 flex-none text-blue-600" />
+              <div
+                className="flex flex-col rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: pastelColors[5] }}
+              >
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-slate-800">
+                  <StarIcon className="h-8 w-8 flex-none text-slate-800" />
                   Tracking Pemahaman
                 </dt>
-                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-300">
+                <dd className="mt-3 flex flex-auto flex-col text-base leading-7 text-slate-700">
                   <p className="flex-auto">
                     Setiap quiz akan memberikan feedback dan skor untuk melacak
                     tingkat pemahaman kalian. Kalian bisa melihat progress dan
@@ -359,62 +406,75 @@ export default function LandingPage() {
         {/* Stats Section */}
         <div
           id="stats"
-          className="bg-white dark:bg-gray-800 py-12 sm:py-16 scroll-mt-20"
+          className="py-12 sm:py-16 scroll-mt-20 rounded-3xl"
+          style={{ backgroundColor: pastelColors[3] }}
         >
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl lg:max-w-none">
               <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
+                <h2 className="text-3xl font-bold tracking-tight text-slate-800 sm:text-4xl">
                   📊 Statistik Keren LogicBase
                 </h2>
-                <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
+                <p className="mt-3 text-lg leading-8 text-slate-700">
                   Wah, banyak banget anak-anak yang sudah bergabung dan belajar
                   logika coding di LogicBase! Lihat angka-angka keren tentang
                   sistem belajar materi + quiz ini!
                 </p>
               </div>
               <dl className="mt-8 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
-                <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
-                  <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
+                <div
+                  className="flex flex-col p-6"
+                  style={{ backgroundColor: pastelColors[0] }}
+                >
+                  <dt className="text-sm font-semibold leading-6 text-slate-700">
                     👦👧 Anak-Anak Aktif
                   </dt>
-                  <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
+                  <dd className="order-first text-3xl font-semibold tracking-tight text-slate-800">
                     2,500+
                   </dd>
-                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                  <p className="text-xs text-slate-700 mt-1">
                     Anak-anak yang belajar setiap bulan
                   </p>
                 </div>
-                <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
-                  <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
+                <div
+                  className="flex flex-col p-6"
+                  style={{ backgroundColor: pastelColors[1] }}
+                >
+                  <dt className="text-sm font-semibold leading-6 text-slate-700">
                     📚 Materi Logika
                   </dt>
-                  <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
+                  <dd className="order-first text-3xl font-semibold tracking-tight text-slate-800">
                     25+
                   </dd>
-                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                  <p className="text-xs text-slate-700 mt-1">
                     Materi logika coding tersedia
                   </p>
                 </div>
-                <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
-                  <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
+                <div
+                  className="flex flex-col p-6"
+                  style={{ backgroundColor: pastelColors[2] }}
+                >
+                  <dt className="text-sm font-semibold leading-6 text-slate-700">
                     ✅ Tingkat Kelulusan Quiz
                   </dt>
-                  <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
+                  <dd className="order-first text-3xl font-semibold tracking-tight text-slate-800">
                     87%
                   </dd>
-                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                  <p className="text-xs text-slate-700 mt-1">
                     Anak-anak yang berhasil lulus quiz
                   </p>
                 </div>
-                <div className="flex flex-col bg-blue-50 dark:bg-blue-900/20 p-6">
-                  <dt className="text-sm font-semibold leading-6 text-blue-600 dark:text-blue-400">
+                <div
+                  className="flex flex-col p-6"
+                  style={{ backgroundColor: pastelColors[5] }}
+                >
+                  <dt className="text-sm font-semibold leading-6 text-slate-700">
                     😊 Tingkat Kebahagiaan
                   </dt>
-                  <dd className="order-first text-3xl font-semibold tracking-tight text-blue-900 dark:text-white">
+                  <dd className="order-first text-3xl font-semibold tracking-tight text-slate-800">
                     92%
                   </dd>
-                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                  <p className="text-xs text-slate-700 mt-1">
                     Anak-anak yang senang belajar di sini
                   </p>
                 </div>
@@ -429,10 +489,10 @@ export default function LandingPage() {
           className="mx-auto max-w-7xl px-6 lg:px-8 py-12 sm:py-16 scroll-mt-20"
         >
           <div className="mx-auto max-w-2xl text-center" id="contact">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-800 sm:text-4xl">
               📞 Hubungi Kami
             </h2>
-            <p className="mt-3 text-lg leading-8 text-gray-600 dark:text-gray-300">
+            <p className="mt-3 text-lg leading-8 text-slate-700">
               Ada pertanyaan atau butuh bantuan? Kakak-kakak di LogicBase siap
               membantu kalian! Jangan malu untuk bertanya ya!
             </p>
@@ -440,38 +500,52 @@ export default function LandingPage() {
 
           <div className="mx-auto mt-8 max-w-4xl">
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center">
-                <div className="mx-auto h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center mb-3">
+              <div
+                className="rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center"
+                style={{ backgroundColor: pastelColors[4] }}
+              >
+                <div
+                  className="mx-auto h-12 w-12 rounded-full flex items-center justify-center mb-3"
+                  style={{ backgroundColor: `${pastelColors[0]}77` }}
+                >
                   <span className="text-2xl">📧</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-slate-800 mb-2">
                   Email
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  support@logicbase.kids
-                </p>
+                <p className="text-slate-700">support@logicbase.kids</p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center">
-                <div className="mx-auto h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center mb-3">
+              <div
+                className="rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center"
+                style={{ backgroundColor: pastelColors[1] }}
+              >
+                <div
+                  className="mx-auto h-12 w-12 rounded-full flex items-center justify-center mb-3"
+                  style={{ backgroundColor: `${pastelColors[2]}77` }}
+                >
                   <span className="text-2xl">💬</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-slate-800 mb-2">
                   Chat Langsung
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Kakak-kakak siap membantu 24/7
-                </p>
+                <p className="text-slate-700">Kakak-kakak siap membantu 24/7</p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center">
-                <div className="mx-auto h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center mb-3">
+              <div
+                className="rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300 cursor-pointer text-center"
+                style={{ backgroundColor: pastelColors[0] }}
+              >
+                <div
+                  className="mx-auto h-12 w-12 rounded-full flex items-center justify-center mb-3"
+                  style={{ backgroundColor: `${pastelColors[3]}77` }}
+                >
                   <span className="text-2xl">📚</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-slate-800 mb-2">
                   Panduan Belajar
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-slate-700">
                   Buku panduan lengkap untuk anak-anak
                 </p>
               </div>
@@ -481,10 +555,10 @@ export default function LandingPage() {
 
         {/* CTA Section */}
         <div className="mx-auto max-w-2xl text-center py-8 sm:py-12 pb-6">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-800 sm:text-4xl">
             🚀 Yuk Mulai Petualangan Coding!
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-lg leading-8 text-gray-600 dark:text-gray-300">
+          <p className="mx-auto mt-3 max-w-xl text-lg leading-8 text-slate-700">
             Bergabunglah dengan LogicBase dan rasakan serunya belajar logika
             coding! Baca materi yang menarik, kerjakan quiz yang seru, dan mulai
             petualangan belajar logika bersama teman-teman lainnya.
@@ -492,13 +566,14 @@ export default function LandingPage() {
           <div className="mt-6 flex items-center justify-center gap-x-6">
             <a
               href="/signup"
-              className="rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-lg hover:from-blue-500 hover:to-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transform hover:scale-105 transition-all duration-200"
+              className="rounded-md px-6 py-3 text-base font-semibold text-slate-800 shadow-lg hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600 transform hover:scale-105 transition-all duration-200"
+              style={{ backgroundColor: pastelColors[2] }}
             >
               🎯 Daftar Sekarang!
             </a>
             <a
               href="/login"
-              className="text-base font-semibold leading-7 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-base font-semibold leading-7 text-slate-800 hover:text-purple-600 transition-colors"
             >
               Sudah punya akun? Masuk Yuk! <span aria-hidden="true">→</span>
             </a>

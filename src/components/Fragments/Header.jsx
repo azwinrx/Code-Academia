@@ -1,16 +1,50 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../helper/supabaseClient.js";
+import { searchMateri } from "../../helper/supabaseMateri.js";
 import { useAuth } from "../../helper/authUtils.js";
+import { useSearch } from "../../helper/useSearch.js";
 
 export default function Header() {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef(null);
   const { user, logout } = useAuth();
+  const { updateSearchTerm } = useSearch();
+
+  // Debounced search effect
+  useEffect(() => {
+    const debounceTimer = setTimeout(async () => {
+      // Update search context for filtering
+      updateSearchTerm(search.trim());
+
+      if (search.trim()) {
+        setIsSearching(true);
+        try {
+          const results = await searchMateri(search.trim(), 5);
+          setSuggestions(results);
+          setShowDropdown(results.length > 0);
+        } catch (error) {
+          console.error("Error searching materials:", error);
+          setSuggestions([]);
+          setShowDropdown(false);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setSuggestions([]);
+        setShowDropdown(false);
+        setIsSearching(false);
+      }
+    }, 300); // 300ms debounce for better responsiveness
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [search, updateSearchTerm]);
 
   // Format tanggal bergabung
   const formatJoinDate = (dateString) => {
@@ -29,60 +63,19 @@ export default function Header() {
     setShowProfile(false);
   };
 
-  // Fetch suggestions saat mengetik
-  const handleSearchChange = async (e) => {
+  // Handle search input change
+  const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
-    if (value.trim()) {
-      const { data, error } = await supabase
-        .from("judul_Materi")
-        .select("id, nama_materi, slug")
-        .ilike("nama_materi", `%${value.trim()}%`)
-        .limit(10);
-      if (!error) {
-        setSuggestions(data);
-        setShowDropdown(true);
-      }
-    } else {
-      // Jika kosong, tampilkan semua materi
-      const { data, error } = await supabase
-        .from("judul_Materi")
-        .select("id, nama_materi, slug")
-        .limit(10);
-      if (!error) {
-        setSuggestions(data);
-        setShowDropdown(true);
-      }
-    }
-  };
-
-  // Saat input pertama kali di klik/fokus, tampilkan semua materi
-  const handleSearchFocus = async () => {
-    if (!search.trim()) {
-      const { data, error } = await supabase
-        .from("judul_Materi")
-        .select("id, nama_materi, slug")
-        .limit(10);
-      if (!error) {
-        setSuggestions(data);
-        setShowDropdown(true);
-      }
-    } else {
-      setShowDropdown(true);
-    }
+    // Search logic is handled by useEffect with debounce
   };
 
   // Handler pencarian saat tekan Enter
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter" && search.trim()) {
-      if (suggestions.length > 0) {
-        navigate(`/materi/${suggestions[0].slug}`);
-      } else {
-        navigate(`/materi?search=${encodeURIComponent(search.trim())}`);
-      }
-      setSearch("");
-      setSuggestions([]);
+      // Just close dropdown, search filtering is handled by useEffect
       setShowDropdown(false);
+      inputRef.current?.blur(); // Remove focus from input
     }
   };
 
@@ -91,12 +84,15 @@ export default function Header() {
     setSearch("");
     setSuggestions([]);
     setShowDropdown(false);
+    updateSearchTerm(""); // Clear search context
     navigate(`/materi/${slug}`);
   };
 
   // Tutup dropdown jika klik di luar
   const handleBlur = () => {
-    setTimeout(() => setShowDropdown(false), 100);
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 150); // Slightly longer delay to allow click on suggestions
   };
 
   // Tampilkan profile hanya jika pencarian tidak aktif
@@ -112,22 +108,27 @@ export default function Header() {
       <div className="flex items-center gap-4">
         <img
           src="/Icon Kobi (maskot LogicBase)/KobiMengajak.svg"
-          className="h-24 absolute right-52"
+          className="h-24 absolute right-64"
         />
         <div className="relative">
           <input
             ref={inputRef}
             type="text"
             placeholder="Cari materi..."
-            className="p-2 rounded-md text-black"
+            className="p-2 rounded-md text-black pr-10"
             value={search}
             onChange={handleSearchChange}
             onKeyDown={handleSearchKeyDown}
-            onFocus={handleSearchFocus}
             onBlur={handleBlur}
           />
+          {/* Loading indicator */}
+          {isSearching && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            </div>
+          )}
           {/* Dropdown hasil pencarian */}
-          {showDropdown && suggestions.length > 0 && (
+          {showDropdown && suggestions.length > 0 && !isSearching && (
             <div className="absolute left-0 mt-1 w-full bg-white text-black rounded shadow-lg z-30 max-h-60 overflow-y-auto">
               {suggestions.map((item) => (
                 <div

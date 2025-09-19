@@ -125,3 +125,50 @@ export function generateSlug(text) {
       .replace(/^-|-$/g, "")
   );
 }
+
+// Simple encryption for IDs (Base64 encoding with URL safety)
+export function encryptId(id) {
+  if (!id) return '';
+  // Convert to string and encode
+  const str = String(id);
+  return btoa(unescape(encodeURIComponent(str)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+// Simple decryption for IDs
+export function decryptId(encryptedId) {
+  if (!encryptedId) return null;
+  try {
+    // Add padding if needed and decode
+    const padded = encryptedId
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+    const base64 = padded + '==='.slice((padded.length + 3) % 4);
+    return decodeURIComponent(escape(atob(base64)));
+  } catch (error) {
+    console.error('Error decrypting ID:', error);
+    return null;
+  }
+}
+
+// Encrypt materi and sub-materi ID combination
+export function encryptQuizSlug(materiId, subMateriId) {
+  const combined = `${materiId}:${subMateriId}`;
+  return encryptId(combined);
+}
+
+// Decrypt materi and sub-materi ID combination
+export function decryptQuizSlug(encryptedSlug) {
+  const decrypted = decryptId(encryptedSlug);
+  if (!decrypted) return null;
+  
+  const parts = decrypted.split(':');
+  if (parts.length !== 2) return null;
+  
+  return {
+    materiId: parseInt(parts[0]),
+    subMateriId: parseInt(parts[1])
+  };
+}

@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { AuthContext } from "../../helper/authUtils";
 import { getCoursesWithProgress } from "../../helper/supabaseMateri";
+import { useSearch } from "../../helper/useSearch.js";
 
 const pastelColors = [
   "#A2D1B0",
@@ -175,9 +176,17 @@ const iconMap = {
     </svg>
   ),
   Variable: (
-       <svg className="w-24 h-24 mb-2 text-white mx-auto" viewBox="0 0 16 16" fill="currentColor">
-    <path fillRule="evenodd" clipRule="evenodd" d="M2 5h2V4H1.5l-.5.5v8l.5.5H4v-1H2V5zm12.5-1H12v1h2v7h-2v1h2.5l.5-.5v-8l-.5-.5zm-2.74 2.57L12 7v2.51l-.3.45-4.5 2h-.46l-2.5-1.5-.24-.43v-2.5l.3-.46 4.5-2h.46l2.5 1.5zM5 9.71l1.5.9V9.28L5 8.38v1.33zm.58-2.15l1.45.87 3.39-1.5-1.45-.87-3.39 1.5zm1.95 3.17l3.5-1.56v-1.4l-3.5 1.55v1.41z"/>
-  </svg>
+    <svg
+      className="w-24 h-24 mb-2 text-white mx-auto"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M2 5h2V4H1.5l-.5.5v8l.5.5H4v-1H2V5zm12.5-1H12v1h2v7h-2v1h2.5l.5-.5v-8l-.5-.5zm-2.74 2.57L12 7v2.51l-.3.45-4.5 2h-.46l-2.5-1.5-.24-.43v-2.5l.3-.46 4.5-2h.46l2.5 1.5zM5 9.71l1.5.9V9.28L5 8.38v1.33zm.58-2.15l1.45.87 3.39-1.5-1.45-.87-3.39 1.5zm1.95 3.17l3.5-1.56v-1.4l-3.5 1.55v1.41z"
+      />
+    </svg>
   ),
 };
 
@@ -185,6 +194,7 @@ export default function Course() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [courses, setCourses] = useState([]);
+  const { searchTerm } = useSearch();
 
   useEffect(() => {
     if (user) {
@@ -192,50 +202,69 @@ export default function Course() {
     }
   }, [user]);
 
+  // Filter courses based on search term
+  const filteredCourses = useMemo(() => {
+    if (!searchTerm || searchTerm.trim() === "") {
+      return courses;
+    }
+
+    return courses.filter((course) =>
+      course.nama_materi.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [courses, searchTerm]);
+
   const handleClick = (slug) => {
     navigate(`/materi/${slug}`);
   };
 
   return (
-    <div className="pl-8 pr-6 pb-6 ">
-      <div className="flex items-center justify-start mb-1">
+    <div className="pl-8 pr-6 pb-6 mt-6">
+      <div className="flex items-center justify-start mb-5">
         <h1 className="text-3xl font-bold text-black">Jelajahi Materi</h1>
         <img
-          src="/Icon Kobi (maskot LogicBase)/kobiMelambai.svg"
+          src="/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
           alt="Kobi"
-          className="w-24 h-24 -ml-4"
+          className="w-10 ml-1"
         />
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {courses.map((course, idx) => {
-          const progress = course.progress || 0;
-          const statusText =
-            progress === 100 ? "Selesai" : `${progress}% Selesai`;
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, idx) => {
+            const progress = course.progress || 0;
+            const statusText =
+              progress === 100 ? "Selesai" : `${progress}% Selesai`;
 
-          return (
-            <div
-              key={course.id}
-              onClick={() => handleClick(course.slug)}
-              className="relative p-6 rounded-lg shadow-md cursor-pointer max-w-52 text-center content-center justify-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:rotate-1"
-              style={{
-                backgroundColor: pastelColors[idx % pastelColors.length],
-              }}
-            >
-              {iconMap[course.nama_materi] && iconMap[course.nama_materi]}
-              <h2 className="text-lg font-semibold mb-2 text-white">
-                {course.nama_materi}
-              </h2>
-              <p className="text-sm text-white">{statusText}</p>
-              <div className="w-full bg-white/30 h-2 mt-2 rounded">
-                <div
-                  className="bg-white h-2 rounded"
-                  style={{ width: `${progress}%` }}
-                ></div>
+            return (
+              <div
+                key={course.id}
+                onClick={() => handleClick(course.slug)}
+                className="relative p-6 rounded-lg shadow-md cursor-pointer max-w-52 text-center content-center justify-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:rotate-1"
+                style={{
+                  backgroundColor: pastelColors[idx % pastelColors.length],
+                }}
+              >
+                {iconMap[course.nama_materi] && iconMap[course.nama_materi]}
+                <h2 className="text-lg font-semibold mb-2 text-white">
+                  {course.nama_materi}
+                </h2>
+                <p className="text-sm text-white">{statusText}</p>
+                <div className="w-full bg-white/30 h-2 mt-2 rounded">
+                  <div
+                    className="bg-white h-2 rounded"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : searchTerm && searchTerm.trim() !== "" ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-gray-500 text-lg">
+              Tidak ada materi yang ditemukan untuk "{searchTerm}"
+            </p>
+          </div>
+        ) : null}
       </div>
     </div>
   );
