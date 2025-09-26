@@ -173,12 +173,12 @@ export default function MateriDetailPage() {
         </nav>
 
         <div className="p-5 border-t border-slate-700/50">
-          <div className="mb-4">
+          <div className="mb-8">
             <div className="flex justify-between text-xs text-slate-300 mb-1">
               <span>Progress</span>
               <span>{progress}%</span>
             </div>
-            <div className="w-full bg-slate-700 rounded-full h-2">
+            <div className="w-full bg-slate-700 rounded-full h-2 mb-4">
               <div
                 className="bg-green-500 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
@@ -254,6 +254,7 @@ export default function MateriDetailPage() {
                         {children}
                       </blockquote>
                     ),
+                    hr: () => <hr className="border-slate-600 my-8" />,
                   }}
                 >
                   {activeSubMateri.markdown_content}
