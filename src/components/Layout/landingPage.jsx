@@ -28,7 +28,7 @@ export default function LandingPage() {
 
   const pastelColors = [
     "#A2D1B0", // Soft green - sama dengan halaman materi
-    "#77B1E3", // Light blue - sama dengan halaman materi  
+    "#77B1E3", // Light blue - sama dengan halaman materi
     "#F1AD8D", // Peach orange - sama dengan halaman materi
     "#A9A6E5", // Lavender purple - sama dengan halaman materi
     "#A2CFD1", // Mint blue - soft dan ramah anak
@@ -51,7 +51,7 @@ export default function LandingPage() {
             <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
               <span className="sr-only">LogicBase</span>
               <img
-                src="public/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
+                src="/Icon Kobi (maskot LogicBase)/kobiMelambai.png"
                 alt="LogicBase Logo"
                 className="h-16 w-auto object-contain align-middle "
               />
