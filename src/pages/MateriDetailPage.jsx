@@ -131,7 +131,7 @@ export default function MateriDetailPage() {
       {/* Sidebar */}
       <aside
         className={`
-          w-72 sm:w-80 bg-[#132238] flex flex-col h-screen fixed left-0 top-0 z-50 shadow-2xl transition-transform duration-300 ease-in-out
+          w-64 sm:w-72 bg-[#132238] flex flex-col h-screen fixed left-0 top-0 z-50 shadow-2xl transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:static lg:z-30
         `}
@@ -229,7 +229,7 @@ export default function MateriDetailPage() {
         </div>
       </aside>
 
-      <main className="flex-1 lg:ml-72 xl:ml-80 flex flex-col overflow-hidden">
+      <main className="flex-1 lg:ml-0 flex flex-col overflow-hidden">
         {/* Mobile Header with Hamburger Menu */}
         <div className="lg:hidden bg-[#132238] p-3 sm:p-4 border-b border-slate-700/50 flex items-center justify-between">
           <button
@@ -257,7 +257,7 @@ export default function MateriDetailPage() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 overflow-y-auto">
+        <div className="flex-1 p-4 sm:p-6 lg:p-6 xl:p-8 overflow-y-auto">
           {activeSubMateri ? (
             <section>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-sky-300">
