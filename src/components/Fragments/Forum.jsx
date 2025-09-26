@@ -285,6 +285,17 @@ export default function Forum() {
 
                     {/* Thread Content */}
                     <div className="flex-1 min-w-0">
+                      {/* Meta Information */}
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-[#333] mb-2">
+                        <span className="font-medium text-[#333] truncate max-w-[120px] sm:max-w-none">
+                          {thread.author_name}
+                        </span>
+                        <span className="hidden xs:inline">•</span>
+                        <span className="text-xs">
+                          {formatTimestamp(thread.created_at)}
+                        </span>
+                      </div>
+
                       <div className="flex items-start gap-2 mb-2">
                         <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-[#333] line-clamp-2 leading-tight">
                           {thread.title}
@@ -296,31 +307,20 @@ export default function Forum() {
                           thread.content?.substring(0, 200) + "..."}
                       </p>
 
-                      {/* Meta Information */}
-                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-[#333]">
-                        <span className="font-medium text-[#333] truncate max-w-[120px] sm:max-w-none">
-                          {thread.author_name}
+                      {/* Thread Statistics */}
+                      <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-[#333]">
+                        <span className="flex items-center gap-1">
+                          💬 <span className="hidden xs:inline">Balasan:</span>{" "}
+                          {thread.reply_count || 0}
                         </span>
-                        <span className="hidden xs:inline">•</span>
-                        <span className="text-xs">
-                          {formatTimestamp(thread.created_at)}
+                        <span className="flex items-center gap-1">
+                          👁️ <span className="hidden sm:inline">Dilihat:</span>{" "}
+                          {thread.view_count || 0}
                         </span>
-                        <div className="flex items-center gap-3 sm:gap-4">
-                          <span className="flex items-center gap-1">
-                            💬{" "}
-                            <span className="hidden xs:inline">Balasan:</span>{" "}
-                            {thread.reply_count || 0}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            👁️{" "}
-                            <span className="hidden sm:inline">Dilihat:</span>{" "}
-                            {thread.view_count || 0}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            ❤️ <span className="hidden sm:inline">Suka:</span>{" "}
-                            {thread.like_count || 0}
-                          </span>
-                        </div>
+                        <span className="flex items-center gap-1">
+                          ❤️ <span className="hidden sm:inline">Suka:</span>{" "}
+                          {thread.like_count || 0}
+                        </span>
                       </div>
                     </div>
                   </div>

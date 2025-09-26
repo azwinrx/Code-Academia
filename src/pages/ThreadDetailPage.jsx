@@ -268,19 +268,16 @@ export default function ThreadDetailPage() {
             } rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6`}
           >
             {/* Thread Header */}
-            <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#77B1E3] rounded-full flex items-center justify-center text-white text-base sm:text-lg lg:text-xl">
-                  {thread.author_avatar || "👤"}
+            <div className="mb-4 sm:mb-6">
+              {/* Meta Information di paling atas */}
+              <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                <div className="flex-shrink-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#77B1E3] rounded-full flex items-center justify-center text-white text-sm sm:text-base">
+                    {thread.author_avatar || "👤"}
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex-1 min-w-0">
-                <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#333] mb-2 sm:mb-3 leading-tight">
-                  {thread.title}
-                </h1>
-
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-[#666]">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#333]">
                   <span className="font-medium text-[#333] truncate max-w-[120px] sm:max-w-none">
                     {thread.author_name}
                   </span>
@@ -288,36 +285,43 @@ export default function ThreadDetailPage() {
                   <span className="text-xs">
                     {formatTimestamp(thread.created_at)}
                   </span>
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
-                    <span className="flex items-center gap-1 whitespace-nowrap">
-                      💬 <span className="hidden sm:inline">Komentar:</span>{" "}
-                      {thread.reply_count || 0}
-                    </span>
-                    <span className="flex items-center gap-1 whitespace-nowrap">
-                      👁️ <span className="hidden lg:inline">Dilihat:</span>{" "}
-                      {thread.view_count || 0}
-                    </span>
-                    <div
-                      onClick={handleLike}
-                      disabled={likingThreads[thread.id]}
-                      className={`flex items-center gap-1 transition-all cursor-pointer duration-200 px-2 sm:px-3 py-1 rounded-md min-h-[32px] ${
-                        likedThreads[thread.id]
-                          ? "text-red-500 hover:text-red-600"
-                          : "text-[#333] hover:text-red-500"
-                      } disabled:opacity-50 disabled:cursor-not-allowed ${
-                        color || "bg-white"
-                      } border-none focus:outline-none whitespace-nowrap`}
-                    >
-                      {likingThreads[thread.id] ? (
-                        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
-                      ) : likedThreads[thread.id] ? (
-                        "❤️"
-                      ) : (
-                        "🤍"
-                      )}
-                      <span>{thread.like_count || 0}</span>
-                    </div>
-                  </div>
+                </div>
+              </div>
+
+              {/* Judul Thread */}
+              <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#333] mb-3 sm:mb-4 leading-tight">
+                {thread.title}
+              </h1>
+
+              {/* Thread Stats */}
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-[#666]">
+                <span className="flex items-center gap-1 whitespace-nowrap">
+                  💬 <span className="hidden sm:inline">Komentar:</span>{" "}
+                  {thread.reply_count || 0}
+                </span>
+                <span className="flex items-center gap-1 whitespace-nowrap">
+                  👁️ <span className="hidden lg:inline">Dilihat:</span>{" "}
+                  {thread.view_count || 0}
+                </span>
+                <div
+                  onClick={handleLike}
+                  disabled={likingThreads[thread.id]}
+                  className={`flex items-center gap-1 transition-all cursor-pointer duration-200 px-2 sm:px-3 py-1 rounded-md min-h-[32px] ${
+                    likedThreads[thread.id]
+                      ? "text-red-500 hover:text-red-600"
+                      : "text-[#333] hover:text-red-500"
+                  } disabled:opacity-50 disabled:cursor-not-allowed ${
+                    color || "bg-white"
+                  } border-none focus:outline-none whitespace-nowrap`}
+                >
+                  {likingThreads[thread.id] ? (
+                    <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                  ) : likedThreads[thread.id] ? (
+                    "❤️"
+                  ) : (
+                    "🤍"
+                  )}
+                  <span>{thread.like_count || 0}</span>
                 </div>
               </div>
             </div>
